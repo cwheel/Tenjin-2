@@ -1,4 +1,4 @@
-package com.scelos.roomlaunch;
+package com.scelos.tenjin;
 
 import android.app.Activity;
 import android.widget.Toast;
