@@ -112,10 +112,10 @@ Passport.use('local', new localStrategy(function(username, password, done) {
 app.post('/login', Passport.authenticate('local', { successRedirect: '/login/success', failureRedirect: '/login/failure', failureFlash: false }));
 
 //Auth success
-app.get('/login/success', function(req, res){res.send({ loginStatus: 'valid' });});
+app.get('/login/success', function(req, res){res.send('AUTH_SUCCESS');});
 
 //Auth failure
-app.get('/login/failure', function(req, res){res.send({ loginStatus: 'failure' });});
+app.get('/login/failure', function(req, res){res.send('AUTH_FAILURE');});
 
 //Handle all incoming GET requests and proxy them to the NAT'd application over a socket
 app.get('*', function(req, res) {

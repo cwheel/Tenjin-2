@@ -1,15 +1,8 @@
 package com.scelos.roomlaunch;
 
-import com.scelos.roomlaunch.util.SystemUiHider;
-
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.view.MotionEvent;
-import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.SeekBar;
@@ -17,7 +10,7 @@ import android.widget.Switch;
 
 import java.util.HashMap;
 
-public class Advanced extends Activity implements LightControllerCallback{
+public class Advanced extends Activity implements LightControllerDelegate {
     private LightController lc;
     private final int SEND_THRESHOLD = 40;
 
@@ -33,6 +26,16 @@ public class Advanced extends Activity implements LightControllerCallback{
 
     private Switch bedSync;
     private Switch musicSync;
+
+    @Override
+    public void lightControllerProxyAuthSuccess() {
+        System.out.println("success!");
+    }
+
+    @Override
+    public void lightControllerProxyAuthFailure() {
+        System.out.println("oh noes it failed!");
+    }
 
     @Override
     public void lightControllerContextUpdated(HashMap context) {
@@ -109,13 +112,6 @@ public class Advanced extends Activity implements LightControllerCallback{
         editor.commit();
 
         super.onBackPressed();
-    }
-
-    @Override
-    public void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        System.out.println("da");
-
     }
 
     @Override

@@ -2,3 +2,6 @@
 	path = RoomLaunch/app/libs/volley
 	url = https://android.googlesource.com/platform/frameworks/volley
 	branch = master
+[submodule "TenjinMobile/app/libs/volley"]
+	path = TenjinMobile/app/libs/volley
+	url = https://android.googlesource.com/platform/frameworks/volley
