@@ -1,0 +1,55 @@
+<html ng-app="tenjin">
+	<head>
+		<!-- Angular -->
+		<script src="bower_components/angular/angular.js"></script>
+		<script src="bower_components/angular-route/angular-route.js"></script>
+		<script src="bower_components/angular-animate/angular-animate.js"></script>
+
+		<!-- Bootstrap -->
+		<script src="bower_components/angular-bootstrap/ui-bootstrap.js"></script>
+		<link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+
+		<!-- jQuery -->
+		<script src="bower_components/jquery/dist/jquery.js"></script>
+		
+		<!-- Weather Icons -->
+		<script src="/bower_components/angular-skycons/angular-skycons.min.js"></script>
+
+		<!-- Controllers -->
+		<script type="text/javascript" src="tenjin.js"></script>
+		<script type="text/javascript" src="controllers/weatherController.js"></script>
+		<script type="text/javascript" src="controllers/uitController.js"></script>
+		<script type="text/javascript" src="controllers/mainController.js"></script>
+
+		<!-- CSS -->
+		<link rel="stylesheet" type="text/css" href="css/animations.css"/>
+		<link rel="stylesheet" type="text/css" href="css/page.css"/>
+		<link rel="stylesheet" type="text/css" href="css/main.css"/>
+		<link rel="stylesheet" type="text/css" href="css/weather.css"/>
+		<link rel="stylesheet" type="text/css" href="css/uit.css"/>
+
+		<!-- Fonts -->
+		<link href='http://fonts.googleapis.com/css?family=Poiret+One' rel='stylesheet' type='text/css'>
+
+		<!-- Grunt Watch Live Reload -->
+		<script src="//localhost:35729/livereload.js"></script>
+	</head>
+
+	<body ng-controller="mainController">
+		<div id="logo"></div>
+
+		<div class="container-fluid"> 
+			<div id="mainView">
+				<div ng-view class="slide"></div>
+			</div>
+		</div>
+
+		<div class="row">
+			<div id="scroller">
+				<span id="scrollerContent">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</span>	
+			</div>
+			</div>
+			<div class="col-md-2 pull-right" id="clock">{{time}}</div>
+		</div>
+	</body>
+</html>

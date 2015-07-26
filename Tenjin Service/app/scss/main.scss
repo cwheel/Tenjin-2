@@ -1,0 +1,45 @@
+#clock {
+	font-family: 'Poiret One', cursive;
+	position: absolute;
+	bottom: 15px;
+	left: 30px;
+	color: white;
+	font-size: 50px;
+}
+
+#logo {
+	background: url("../src/tenjin-rounded.svg");
+	-webkit-background-size: cover;
+	background-size: cover;
+	width: 175;
+	height: 70;
+	position: absolute;
+	top: 0px;
+	left: 30px;
+	opacity: 0.75;
+}
+
+#scroller {
+	bottom: 100px;
+	position: absolute;
+	color: white;
+	font-size: 18px;
+	width: 100%;
+}
+
+#scrollerContent {
+	position: relative;
+	left: 0%;
+	float: left;
+	white-space: pre;
+	-webkit-animation: scroll 30s linear infinite;
+}
+
+@-webkit-keyframes scroll {
+	from {
+		left: 100%;
+	}
+	to {
+		left: -100%;
+	}
+}

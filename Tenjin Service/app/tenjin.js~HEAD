@@ -1,0 +1,14 @@
+var tenjin = angular.module('tenjin', ['ngRoute', 'ngAnimate','angular-skycons',]);
+
+tenjin.config(['$routeProvider',
+  function($routeProvider) {
+    $routeProvider.when('/',{
+      redirectTo: '/1'
+    }).when('/1',{
+      templateUrl: '/pages/uit.html',
+      controller: 'uitController'
+    }).when('/2',{
+      templateUrl: '/pages/weather.html',
+      controller: 'weatherController'
+    });
+}]);

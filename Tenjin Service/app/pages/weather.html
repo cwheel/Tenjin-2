@@ -1,0 +1,14 @@
+<div class="centerView">
+		<div class="weeklyIcon"></div>
+		<div class="weeklyName"> <div style="position:absolute;bottom:0;left:75px;"> Weekly Weather Report </div></div>
+		<div ng-repeat="day in weekWeather.data|limitTo:4" class="col-md-3 weeklyWeather">
+			<div class="weeklyDay">{{day.day}}</div>
+			<skycon class="weeklyDayIcon" icon="day.icon"></skycon>
+			<div class="weeklySummary">{{day.summary}}</div>
+			<div class="weeklySubText">High: <span style="font-weight:400;"> {{day.apparentTemperatureMax}} °F at {{day.maxTime}}:00 </span></div>
+			<div class="weeklySubText">Low: <span style="font-weight:400;">{{day.apparentTemperatureMin}} °F at {{day.minTime}}:00</span></div>
+			<div class="weeklySubText">Chance of Precipitation: <span style="font-weight:400;">{{day.precipProbability}} % </span></div>
+			<div class="weeklySubText">Total Precipitation: <span style="font-weight:400;">{{day.precipIntensity}} in.</span></div>
+		</div>
+	<div class="weeklyOverallSummary">Weekly Summary: <span style="font-weight:400;"> {{weekWeather.summary}} </span></div>
+</div>

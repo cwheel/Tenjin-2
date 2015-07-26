@@ -1,0 +1,36 @@
+body{
+	overflow: hidden;
+	background-image: url(../src/background.png);
+	height:100%;
+	width:100%;
+
+	-webkit-perspective: 1000;
+}
+
+#mainView{
+	height: 65%;
+	position: absolute;
+	width: 100%;
+	left: 0px;
+	top: 15%;
+}
+
+.centerView {
+	padding: 15px;
+	position: absolute;
+	width:80%;
+	left: 10%;
+	height: 100%;
+	-webkit-border-radius: 10px;
+	border-radius: 10px;
+	background:rgba(255,255,255,0.92);
+	-webkit-box-shadow: 10px 10px 23px -6px rgba(0,0,0,0.6);
+}
+
+.page-title {
+	font-size: 18pt;
+	font-weight: 500;
+	margin-bottom:15px;
+	height:50px;
+	position:relative;
+}

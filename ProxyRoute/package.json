@@ -1,0 +1,19 @@
+ {
+  "name": "Tenjin-2",
+  "version": "2.0.0",
+  "description": "A proxy for exposing internal Express routes to the world behind NAT",
+  "main": "server.js",
+
+  "dependencies": {
+    "body-parser": "latest",
+    "express": "latest",
+    "grunt": "latest",
+    "grunt-nodemon": "latest",
+    "socket.io": "latest",
+    "socketio-auth": "latest",
+    "passport": "latest",
+    "passport-local": "latest",
+    "cookie-parser": "latest",
+    "express-session": "latest"
+  }
+}
