@@ -6,6 +6,7 @@ var Passport = require('passport');
 var session = require('express-session');
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
+var sha512 = require('js-sha512');
 
 var app = express();
 var http = require('http').Server(app);
@@ -96,16 +97,19 @@ io.on('disconnect', function(socket){
 
 //Passport auth-request
 Passport.use('local', new localStrategy(function(username, password, done) {
-	console.log("ds");
-	for (var user in Object.keys(config.users)) {
-		console.log(user);
+	for (var user in config.users) {
+	    if (config.users.hasOwnProperty(user)) {
+	        if (username == user && config.users[user] == sha512(password)) {
+	        	return done(null, true);
+	        }
+	    }
 	}
 
-	return done(null, true);
+	return done(null, false);
 }));
 
 //Authenticate the proxy user
-app.get('/login', Passport.authenticate('local', { successRedirect: '/login/success', failureRedirect: '/login/failure', failureFlash: false }));
+app.post('/login', Passport.authenticate('local', { successRedirect: '/login/success', failureRedirect: '/login/failure', failureFlash: false }));
 
 //Auth success
 app.get('/login/success', function(req, res){res.send({ loginStatus: 'valid' });});
