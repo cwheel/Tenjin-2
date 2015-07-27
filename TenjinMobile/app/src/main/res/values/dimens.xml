@@ -4,8 +4,8 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
 
      <!-- Standart dimens for the color wheel -->
-    <dimen name="color_wheel_radius">100dp</dimen>
-    <dimen name="color_wheel_thickness">10dp</dimen>
+    <dimen name="color_wheel_radius">125dp</dimen>
+    <dimen name="color_wheel_thickness">15dp</dimen>
     <dimen name="color_center_halo_radius">60dp</dimen>
     <dimen name="color_center_radius">45dp</dimen>
     <dimen name="color_pointer_halo_radius">18dp</dimen>

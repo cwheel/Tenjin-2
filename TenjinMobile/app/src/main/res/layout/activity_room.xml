@@ -63,20 +63,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/textView2"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="29dp" />
 
     <com.larswerkman.holocolorpicker.SaturationBar
         android:id="@+id/saturationbar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/valuebar"
-        android:layout_alignStart="@+id/valuebar" />
+        android:layout_below="@+id/picker"
+        android:layout_centerHorizontal="true" />
 
     <com.larswerkman.holocolorpicker.ValueBar
         android:id="@+id/valuebar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/picker"
+        android:layout_below="@+id/saturationbar"
         android:layout_centerHorizontal="true" />
 
 </RelativeLayout>
