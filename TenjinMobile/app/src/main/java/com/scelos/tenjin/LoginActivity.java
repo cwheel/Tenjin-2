@@ -26,6 +26,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -82,7 +83,7 @@ public class LoginActivity extends Activity implements LightControllerDelegate {
 
         showProgress(true);
 
-        LightController lc = new LightController(this, "http://10.0.0.112:4000/", mUsernameView.getText().toString(), mPasswordView.getText().toString());
+        LightController lc = new LightController(this, "http://192.168.1.126:4000/", mUsernameView.getText().toString(), mPasswordView.getText().toString());
     }
 
     @Override
@@ -95,6 +96,8 @@ public class LoginActivity extends Activity implements LightControllerDelegate {
         showProgress(false);
 
         Intent i = new Intent(this.getApplicationContext(), RoomActivity.class);
+        i.putExtra("username", mUsernameView.getText().toString());
+        i.putExtra("password", mPasswordView.getText().toString());
         i.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         this.startActivity(i);
 
@@ -103,6 +106,7 @@ public class LoginActivity extends Activity implements LightControllerDelegate {
 
     @Override
     public void lightControllerProxyAuthFailure() {
+        Toast.makeText(this.getApplicationContext(), "Invalid Credentials", Toast.LENGTH_SHORT).show();
         showProgress(false);
     }
 

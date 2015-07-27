@@ -17,9 +17,9 @@ module.exports = function(app, server, accessToken, routes) {
 	//A GET request was passed through
   	socket.on('GET', function(req) {
   		//Verify that the route is approved for proxying
-  		var verified;
+  		var verified = false;
   		for (var i = routes.length - 1; i >= 0; i--) {
-  			if (req.originalUrl.indexOf(routes[i]) == 0) {
+  			if (req.originalUrl.indexOf(routes[i]) === 0) {
   				verified = true;
   				break;
   			}
