@@ -83,7 +83,7 @@ tenjin.config(['$routeProvider',
 
           $timeout(function() {
             $scope.updateClock();
-          }, 5);
+          }, 500);
         };
 
         $scope.updateClock();
