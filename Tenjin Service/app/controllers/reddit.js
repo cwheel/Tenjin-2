@@ -4,13 +4,12 @@ tenjin.controller('redditController',function($rootScope,$http){
 	var subreddits = ['technology','all','netsec'];
 
 	for (var i = 0; i < subreddits.length; i++){
-		var subreddit = subreddits[i];
 		$http.get('http://www.reddit.com/r/' + subreddits[i]  +'/top/.json')
-		.then(function(res, i){
-			console.log(subreddits[i]);
-			reddit[subreddits[i]] = [];
+		.then(function(res){
+			var subreddit = res.data.data.children[0].data.subreddit;
+			reddit[subreddit] = [];
 			for (var j = 0; j < 3; j++){
-				reddit[subreddits[i]].push(res.data.data.children[j].data);
+				reddit[subreddit].push(res.data.data.children[j].data);
 			}
 		console.log(reddit);
 		});

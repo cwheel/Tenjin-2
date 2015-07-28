@@ -10,6 +10,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import java.net.CookieHandler;
+import java.net.CookieManager;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,6 +44,7 @@ public class LightController {
     public static final String rgbw = "lights/rgbw1and2";
 
     private HashMap<String, Integer> context;
+    private Boolean isUsingProxy = false;
 
     //Connect to the light controller from the internal network
     public LightController(Activity activ) {
@@ -53,11 +56,16 @@ public class LightController {
     public LightController(final Activity activ, String server, final String username, final String password) {
         srv = server;
         activity = activ;
+        isUsingProxy = true;
+        CookieManager cookieManager = new CookieManager();
+        CookieHandler.setDefault(cookieManager);
+
         queue = Volley.newRequestQueue(activ);
 
         StringRequest login = new StringRequest(Request.Method.POST, srv + "login", new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
+                System.out.println(response);
               if (response.equals("AUTH_SUCCESS")) {
                   ((LightControllerDelegate) activ).lightControllerProxyAuthSuccess();
               } else {

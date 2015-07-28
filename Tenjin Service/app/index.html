@@ -31,8 +31,11 @@
 
 		<div class="row">
 			<div id="scroller">
-				<span id="scrollerContent">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</span>	
-			</div>
+				<span id="scrollerContent">
+					 <span ng-repeat="(key, value) in reddit">{{key}} - <span ng-repeat="story in value">{{story.title}}</span>
+					 </span>
+				</span>	
+			</div> 
 			</div>
 			<div class="col-md-2 pull-right" id="clock">{{time}}</div>
 		</div>

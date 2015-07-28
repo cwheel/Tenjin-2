@@ -22,9 +22,11 @@ tenjin.config(['$routeProvider',
 
 
   }]);
-  tenjin.controller('mainController', function($scope,$location,$timeout,$route) {
+  tenjin.controller('mainController', function($scope,$location,$timeout,$route, $http) {
         var pageId = 1;
         var tfhr = false;
+        var subreddits = ['technology','all','netsec'];
+
 
         $scope.nextPage = function() {
             pageId = (++pageId % (((Object.keys($route.routes).length - 2) / 2) + 1)) || 1;
@@ -35,10 +37,29 @@ tenjin.config(['$routeProvider',
             }, 300000);
         };
 
+        $scope.updateReddit = function(){
+            $scope.reddit = {};
+            for (var i = 0; i < subreddits.length; i++){
+              $http.get('http://www.reddit.com/r/' + subreddits[i]  +'/top/.json')
+              .then(function(res){
+                var subreddit = res.data.data.children[0].data.subreddit;
+                $scope.reddit[subreddit] = [];
+                for (var j = 0; j < 3; j++){
+                  $scope.reddit[subreddit].push(res.data.data.children[j].data);
+                }
+              });
+            }
+            $timeout(function() {
+              $scope.updateReddit();
+            }, 30000);
+        }
+
         // Used to Start the Loop for the first time.
         $timeout(function() {
           $scope.nextPage();
         }, 30000);
+        $scope.updateReddit();
+
 
         $scope.updateClock = function() {
           if (tfhr) {
@@ -62,7 +83,7 @@ tenjin.config(['$routeProvider',
 
           $timeout(function() {
             $scope.updateClock();
-          }, 5);
+          }, 500);
         };
 
         $scope.updateClock();
