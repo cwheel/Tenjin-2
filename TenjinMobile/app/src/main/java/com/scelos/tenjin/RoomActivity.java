@@ -182,6 +182,14 @@ public class RoomActivity extends ActionBarActivity implements LightControllerDe
             return true;
         }
 
+        if (item.getItemId() == R.id.action_alarms) {
+            Intent i = new Intent(this.getApplicationContext(), AlarmsActivity.class);
+            i.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            this.startActivity(i);
+
+            return true;
+        }
+
         return super.onOptionsItemSelected(item);
     }
 

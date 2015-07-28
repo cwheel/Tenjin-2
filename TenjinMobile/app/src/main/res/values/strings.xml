@@ -7,4 +7,8 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="action_logout">Logout</string>
+    <string name="action_alarms">Alarms</string>
+    <string name="action_newAlarm">New Alarm</string>
+    <string name="title_activity_alarms">Room Alarms</string>
+    <string name="action_settings">Settings</string>
 </resources>
