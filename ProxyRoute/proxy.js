@@ -78,7 +78,7 @@ function socketAuthReq(data, callback) {
 
 //Listen for incoming proxy applications
 io.on('connection', function(socket){
-	console.log("=> Application connected from " + socket.request.connection._peername.address + ":" + socket.request.connection._peername.port);
+	console.log("=> Application connected from " + socket.request.connection.remoteAddress + ":" + socket.request.connection.remotePort);
 
 	//Ensure we don't already have an application connected
 	if (appSocket) {
@@ -95,7 +95,7 @@ io.on('connection', function(socket){
 
 //Watch for proxy client disconnects
 io.on('disconnect', function(socket){
-	console.log("=> Application at " + socket.request.connection._peername.address + ":" + socket.request.connection._peername.port + " disconnected");
+	console.log("=> Application at " + socket.request.connection.remoteAddress + ":" + socket.request.connection.remotePort + " disconnected");
 });
 
 //Passport auth-request
