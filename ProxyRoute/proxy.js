@@ -139,7 +139,7 @@ app.get('*', function(req, res) {
     		res.send("REMOTE_APP_NOT_CONNECTED");
     	}
 	} else {
-		res.status(401);
+		res.status(401).send("Authentication Error");
 	}
 
 	
