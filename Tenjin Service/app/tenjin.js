@@ -11,7 +11,7 @@ tenjin.config(['$routeProvider',
         controller: 'hourlyWeatherController'
     }).when('/2',{
         templateUrl: '/pages/uit.html',
-        controller: 'uitController'
+        controller: 'uitController'   
     }).when('/3',{
         templateUrl: '/pages/weeklyWeather.html',
         controller: 'weeklyWeatherController'
@@ -89,14 +89,3 @@ tenjin.config(['$routeProvider',
         $scope.updateClock();
 
     });
-  tenjin.controller('secondController', function($scope,$location,$timeout) {
-      // create a message to display in our view
-      $scope.message = 'red';
-
-    });
-    tenjin.controller('firstController', function($scope,$location,$timeout) {
-      // create a message to display in our view
-      $scope.message = 'green';
-
-    });
-

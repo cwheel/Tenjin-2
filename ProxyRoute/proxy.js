@@ -9,7 +9,7 @@ var cookieParser = require('cookie-parser');
 var sha512 = require('js-sha512');
 
 var app = express();
-var http = require('http').Server(app);
+var http = require('https').Server({key: fs.readFileSync("/etc/ssl/cert/priv.key"), cert: fs.readFileSync("/etc/ssl/cert/cert.crt")}, app);
 var io = require('socket.io')(http);
 
 var appSocket;
