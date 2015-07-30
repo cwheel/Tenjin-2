@@ -82,8 +82,12 @@ io.on('connection', function(socket){
 
 	//Ensure we don't already have an application connected
 	if (appSocket) {
-		socket.emit('error', 'app_already_connected');
-		socket.disconnect();
+		if (appSocket.connected) {
+			socket.emit('error', 'app_already_connected');
+			socket.disconnect();
+		} else {
+			appSocket = socket;
+		}
 	} else {
 		appSocket = socket;
 	}
@@ -92,7 +96,6 @@ io.on('connection', function(socket){
 //Watch for proxy client disconnects
 io.on('disconnect', function(socket){
 	console.log("=> Application at " + socket.request.connection._peername.address + ":" + socket.request.connection._peername.port + " disconnected");
-	appSocket = null;
 });
 
 //Passport auth-request
