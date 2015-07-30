@@ -1,6 +1,4 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools" tools:context="com.scelos.tenjin.AlarmsActivity">
-    <item android:id="@+id/action_newAlarm" android:title="@string/action_newAlarm"
-        android:orderInCategory="100" app:showAsAction="never" />
 </menu>

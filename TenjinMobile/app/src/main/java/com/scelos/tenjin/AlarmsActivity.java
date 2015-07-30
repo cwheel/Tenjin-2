@@ -22,19 +22,12 @@ public class AlarmsActivity extends ActionBarActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_alarms, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-
-        if (item.getItemId() == R.id.action_newAlarm) {
-            newAlarm();
-            return true;
-        }
-
         return super.onOptionsItemSelected(item);
     }
 

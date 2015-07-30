@@ -19,6 +19,7 @@ public class LightController {
     private Activity activity;
     private RequestQueue queue;
 
+    //Set to the default internal access IP
     private String srv = "http://192.168.1.126:3000/";
 
     public static final String red1 = "lights/r1";

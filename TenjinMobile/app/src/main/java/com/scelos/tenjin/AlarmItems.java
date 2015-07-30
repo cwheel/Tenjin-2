@@ -50,6 +50,8 @@ public class AlarmItems extends BaseAdapter {
         row.alarmName = (TextView) rowView.findViewById(R.id.alarmTitle);
         row.alarmName.setText(alarms[position]);
 
+
+
         rowView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
