@@ -66,7 +66,7 @@ public class RoomActivity extends ActionBarActivity implements LightControllerDe
 
     @Override
     protected void onResume() {
-        lc = new LightController(this, "http://192.168.1.126:4000/", this.getIntent().getStringExtra("username"), this.getIntent().getStringExtra("password"));
+        lc = new LightController(this, Config.srv, this.getIntent().getStringExtra("username"), this.getIntent().getStringExtra("password"));
         super.onResume();
     }
 
@@ -90,7 +90,7 @@ public class RoomActivity extends ActionBarActivity implements LightControllerDe
         saturationBar.setEnabled(false);
         valueBar.setEnabled(false);
 
-        lc = new LightController(this, "http://192.168.1.126:4000/", this.getIntent().getStringExtra("username"), this.getIntent().getStringExtra("password"));
+        lc = new LightController(this, Config.srv, this.getIntent().getStringExtra("username"), this.getIntent().getStringExtra("password"));
 
         picker.addValueBar(valueBar);
         picker.addSaturationBar(saturationBar);

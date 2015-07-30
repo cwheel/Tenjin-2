@@ -1,4 +1,5 @@
 var schedule = require('node-schedule');
+var moment = require('moment');
 var fs = require("fs");
 
 module.exports = function(app) {
@@ -8,15 +9,20 @@ module.exports = function(app) {
 		if (err) {
 			alarms =  {};
 		} else {
-			alarms = data;
+			alarms = JSON.parse(data);
+			console.log("=> Loaded alarms db!")
 
 			for (var alarm in alarms) {
 		  	    if (alarms.hasOwnProperty(alarm)) {
-		  	    	if ((new Date(alarms[alarm].date) > (new Date())) {
+		  	    	
+		  	    	var alarmDate = moment(alarms[alarm].date).toDate();
+		  	    	if (alarmDate > (new Date())) {
 		  	    		if (alarms[alarm].type == "audio") {
-		  	    			alarms[alarm].job = schedule.scheduleJob(alarms[alarm].date, audioOnlyAlarm);
+		  	    			console.log("    • Scheduling alarm job for " + alarmDate);
+		  	    			alarms[alarm].job = schedule.scheduleJob(alarmDate, audioOnlyAlarm);
 		  	    		} else if (alarms[alarm].type == "audio-light") {
-		  	    			alarms[alarm].job = schedule.scheduleJob(alarms[alarm].date, audioAndLightAlarm);
+		  	    			cconsole.log("    • Scheduling alarm job for " + alarmDate);
+		  	    			alarms[alarm].job = schedule.scheduleJob(alarmDate, audioAndLightAlarm);
 		  	    		}
 		  	    	}
 		  	    }
@@ -40,13 +46,13 @@ module.exports = function(app) {
 
 	//Uses YYYY-MM-DDTHH:MM:SS format
 	app.get('/alarms/new', function(req, res) {
-		var execDate = new Date(req.query.date);
+		var execDate = moment(req.query.date);
 		var alarm;
 
 		if (req.query.type == "audio") {
-			alarm = schedule.scheduleJob(execDate, audioOnlyAlarm);
+			alarm = schedule.scheduleJob(execDate.toDate(), audioOnlyAlarm);
 		} else if (req.query.type == "audio-light") {
-			alarm = schedule.scheduleJob(execDate, audioAndLightAlarm);
+			alarm = schedule.scheduleJob(execDate.toDate(), audioAndLightAlarm);
 		}
 
 		alarms[req.query.name] = {job: alarm, date: execDate, type: req.query.type, prettyDate: req.query.prettyDate};

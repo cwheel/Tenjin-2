@@ -83,7 +83,7 @@ public class LoginActivity extends Activity implements LightControllerDelegate {
 
         showProgress(true);
 
-        LightController lc = new LightController(this, "http://192.168.1.126:4000/", mUsernameView.getText().toString(), mPasswordView.getText().toString());
+        LightController lc = new LightController(this, Config.srv, mUsernameView.getText().toString(), mPasswordView.getText().toString());
     }
 
     @Override

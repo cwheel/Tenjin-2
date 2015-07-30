@@ -4,14 +4,20 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ListView;
 
 
 public class AlarmsActivity extends ActionBarActivity {
+    private ListView alarmsView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alarms);
+
+        String[] test = {"7:25", "8:30", "9:45"};
+        alarmsView = (ListView)findViewById(R.id.listView);
+        alarmsView.setAdapter(new AlarmItems(this, test));
     }
 
     @Override
