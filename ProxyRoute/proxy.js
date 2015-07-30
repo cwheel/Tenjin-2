@@ -122,21 +122,27 @@ app.get('/login/failure', function(req, res){res.send('AUTH_FAILURE');});
 
 //Handle all incoming GET requests and proxy them to the NAT'd application over a socket
 app.get('*', function(req, res) {
-	if (appSocket) {
-		//Send the GET request to the connected application
-		appSocket.emit("GET", {originalUrl: req.originalUrl, query: req.query});
+	if (req.isAuthenticated()) {
+    	if (appSocket) {
+    		//Send the GET request to the connected application
+    		appSocket.emit("GET", {originalUrl: req.originalUrl, query: req.query});
 
-		//Handler for the applications response
-		var proxyResponse = function(resp) {
-			res.send(resp);
-			appSocket.removeListener('GET_RESP', proxyResponse);
-		};
+    		//Handler for the applications response
+    		var proxyResponse = function(resp) {
+    			res.send(resp);
+    			appSocket.removeListener('GET_RESP', proxyResponse);
+    		};
 
-		//Add the handler
-		appSocket.on('GET_RESP', proxyResponse);
+    		//Add the handler
+    		appSocket.on('GET_RESP', proxyResponse);
+    	} else {
+    		res.send("REMOTE_APP_NOT_CONNECTED");
+    	}
 	} else {
-		res.send("REMOTE_APP_NOT_CONNECTED");
+		res.status(401);
 	}
+
+	
 });
 
 //Passport serialization
