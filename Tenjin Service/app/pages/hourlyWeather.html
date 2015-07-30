@@ -1,8 +1,17 @@
 <div class="centerView">
 	<div class="col-md-3">
-		
+		<div>Current Weather</div>
+		<skycon class="weeklyDayIcon" icon="minWeather.icon"></skycon>
+		<div>{{minWeather.summary}}</div>
 	</div>
 	<div class="col-md-9">
-		
+		<div>Hourly Weather</div>
+		<div ng-repeat="hour in hourWeather.data|limitTo:7" class="row">
+			<skycon class="col-md-2" icon="hour.icon" ></skycon>
+			<div class="col-md-1">{{getHour(hour.time)}}:00</div>
+			<div class="col-md-1">{{hour.apparentTemperature}}&deg; F</div>
+			<div class="col-md-1">{{hour.precipProbability}} %</div>
+		</div>
 	</div>
+	
 </div>

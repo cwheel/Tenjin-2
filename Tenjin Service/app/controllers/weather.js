@@ -46,5 +46,9 @@ tenjin.controller('hourlyWeatherController', function($scope,$http){
 		$scope.minWeather = res.data.minutely;
 		console.log($scope.minWeather);
 	});
+	$scope.getHour = function(unix){
+		console.log(unix);
+		return new Date(unix * 1000).getHours();
+	}
 });
 
