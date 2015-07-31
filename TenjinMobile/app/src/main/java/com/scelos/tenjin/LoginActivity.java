@@ -10,6 +10,8 @@ import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.AsyncTask;
 
@@ -59,6 +61,8 @@ public class LoginActivity extends Activity implements LightControllerDelegate {
             }
         });
 
+        getWindow().getDecorView().setBackgroundColor(Color.parseColor("#3e3a4f"));
+
         Button login = (Button) findViewById(R.id.sign_in_button);
         login.setOnClickListener(new OnClickListener() {
             @Override
@@ -66,6 +70,7 @@ public class LoginActivity extends Activity implements LightControllerDelegate {
                 attemptLogin();
             }
         });
+        login.getBackground().setColorFilter(Color.parseColor("#2c273e"), PorterDuff.Mode.MULTIPLY);
 
 
         mLoginFormView = findViewById(R.id.login_form);

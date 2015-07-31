@@ -2,6 +2,7 @@ package com.scelos.tenjin;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -74,6 +75,8 @@ public class RoomActivity extends ActionBarActivity implements LightControllerDe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_room);
+
+        getWindow().getDecorView().setBackgroundColor(Color.parseColor("#3e3a4f"));
 
         picker = (ColorPicker)findViewById(R.id.picker);
         saturationBar = (SaturationBar)findViewById(R.id.saturationbar);

@@ -7,8 +7,15 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.HttpClientStack;
+import com.android.volley.toolbox.HttpStack;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+
+import org.apache.http.conn.ClientConnectionManager;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
+import org.apache.http.params.HttpParams;
 
 import java.net.CookieHandler;
 import java.net.CookieManager;
@@ -47,6 +54,11 @@ public class LightController {
     private HashMap<String, Integer> context;
     private Boolean isUsingProxy = false;
 
+    private ClientConnectionManager mClientConnectionManager;
+    private HttpParams mHttpParams;
+    private ThreadSafeClientConnManager mThreadSafeClientConnManager;
+    private HttpStack httpStack;
+
     //Connect to the light controller from the internal network
     public LightController(Activity activ) {
         activity = activ;
@@ -58,10 +70,21 @@ public class LightController {
         srv = server;
         activity = activ;
         isUsingProxy = true;
+
         CookieManager cookieManager = new CookieManager();
         CookieHandler.setDefault(cookieManager);
 
-        queue = Volley.newRequestQueue(activ);
+        DefaultHttpClient mDefaultHttpClient = new DefaultHttpClient();
+
+        mClientConnectionManager = mDefaultHttpClient.getConnectionManager();
+        mHttpParams = mDefaultHttpClient.getParams();
+        mThreadSafeClientConnManager = new ThreadSafeClientConnManager( mHttpParams, mClientConnectionManager.getSchemeRegistry() );
+
+        mDefaultHttpClient = new DefaultHttpClient( mThreadSafeClientConnManager, mHttpParams );
+
+        httpStack = new HttpClientStack( mDefaultHttpClient );
+
+        queue = Volley.newRequestQueue(activ, httpStack);
 
         StringRequest login = new StringRequest(Request.Method.POST, srv + "login", new Response.Listener<String>() {
             @Override

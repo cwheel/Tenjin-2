@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.AppCompat.Tenjin" parent="Theme.AppCompat">
+        <item name="colorPrimary">#2c273e</item>
+        <item name="colorPrimaryDark">#252234</item>
+        <item name="colorAccent">#fa3e7f</item>
+        <item name="actionOverflowMenuStyle">@style/CMOptionsMenu</item>
+    </style>
+
+    <style name="CMOptionsMenu" parent="Widget.AppCompat.PopupMenu.Overflow">
+        <item name="android:popupBackground">#2c273e</item>
+    </style>
+
+</resources>

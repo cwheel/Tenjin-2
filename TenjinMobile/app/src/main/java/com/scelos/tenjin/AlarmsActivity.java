@@ -1,5 +1,7 @@
 package com.scelos.tenjin;
 
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -14,6 +16,8 @@ public class AlarmsActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alarms);
+
+        getWindow().getDecorView().setBackgroundColor(Color.parseColor("#3e3a4f"));
 
         String[] test = {"7:25", "8:30", "9:45"};
         alarmsView = (ListView)findViewById(R.id.listView);

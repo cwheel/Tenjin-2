@@ -23,5 +23,9 @@
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
         android:layout_alignBottom="@+id/listView"
-        android:layout_alignEnd="@+id/listView" />
+        android:scaleType="centerCrop"
+        android:padding="18dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="false"
+        android:layout_centerHorizontal="true" />
 </RelativeLayout>

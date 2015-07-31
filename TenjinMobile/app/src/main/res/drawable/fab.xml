@@ -99,12 +99,12 @@
             android:color="?android:colorControlHighlight">
             <item android:id="@android:id/mask">
                 <shape android:shape="oval">
-                    <solid android:color="#FFBB00" />
+                    <solid android:color="#fa3e7f" />
                 </shape>
             </item>
             <item>
                 <shape android:shape="oval">
-                    <solid android:color="#009688" />
+                    <solid android:color="#fa3e7f" />
                 </shape>
             </item>
         </ripple>
