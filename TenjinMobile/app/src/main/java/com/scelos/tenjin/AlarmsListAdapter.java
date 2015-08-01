@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-public class AlarmItems extends BaseAdapter {
+public class AlarmsListAdapter extends BaseAdapter {
     String [] alarms;
     Context context;
     int [] imageId;
@@ -18,7 +18,7 @@ public class AlarmItems extends BaseAdapter {
     private static LayoutInflater inflater = null;
 
 
-    public AlarmItems(Activity activity, String[] alarmsSource) {
+    public AlarmsListAdapter(Activity activity, String[] alarmsSource) {
         alarms = alarmsSource;
         context = activity;
         robotoFont = Typeface.createFromAsset(activity.getAssets(), "roboto_light.ttf");

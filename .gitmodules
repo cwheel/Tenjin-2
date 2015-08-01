@@ -8,3 +8,6 @@
 [submodule "TenjinMobile/app/libs/FloatingActionButton"]
 	path = TenjinMobile/app/libs/FloatingActionButton
 	url = https://github.com/makovkastar/FloatingActionButton.git
+[submodule "TenjinMobile/app/libs/gson"]
+	path = TenjinMobile/app/libs/gson
+	url = https://github.com/google/gson.git

@@ -2,7 +2,6 @@ package com.scelos.tenjin;
 
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -14,11 +13,12 @@ import com.larswerkman.holocolorpicker.ColorPicker;
 import com.larswerkman.holocolorpicker.SaturationBar;
 import com.larswerkman.holocolorpicker.ValueBar;
 
-import java.lang.reflect.InvocationTargetException;
+import org.json.JSONObject;
+
 import java.util.HashMap;
 
 
-public class RoomActivity extends ActionBarActivity implements LightControllerDelegate {
+public class RoomActivity extends ActionBarActivity implements TenjinRoomDelegate {
     private final int lightOn = 255;
 
     private ColorPicker picker;
@@ -29,10 +29,10 @@ public class RoomActivity extends ActionBarActivity implements LightControllerDe
     private Switch rightBed;
     private Switch desk;
 
-    private LightController lc;
+    private TenjinRoom room;
 
     @Override
-    public void lightControllerContextUpdated(HashMap context) {
+    public void roomLightContextUpdated(HashMap context) {
         leftBed.setEnabled(true);
         rightBed.setEnabled(true);
         desk.setEnabled(true);
@@ -56,18 +56,23 @@ public class RoomActivity extends ActionBarActivity implements LightControllerDe
     }
 
     @Override
-    public void lightControllerProxyAuthSuccess() {
-        lc.fetchContext(this);
+    public void roomLightProxyAuthSuccess() {
+        room.fetchLightingContext(this);
     }
 
     @Override
-    public void lightControllerProxyAuthFailure() {
+    public void roomLightProxyAuthFailure() {
         returnToLogin();
     }
 
     @Override
+    public void roomAlarmsUpdate(JSONObject resp) {
+
+    }
+
+    @Override
     protected void onResume() {
-        lc = new LightController(this, Config.srv, this.getIntent().getStringExtra("username"), this.getIntent().getStringExtra("password"));
+        room = new TenjinRoom(this, Config.srv, this.getIntent().getStringExtra("username"), this.getIntent().getStringExtra("password"));
         super.onResume();
     }
 
@@ -93,7 +98,7 @@ public class RoomActivity extends ActionBarActivity implements LightControllerDe
         saturationBar.setEnabled(false);
         valueBar.setEnabled(false);
 
-        lc = new LightController(this, Config.srv, this.getIntent().getStringExtra("username"), this.getIntent().getStringExtra("password"));
+        room = new TenjinRoom(this, Config.srv, this.getIntent().getStringExtra("username"), this.getIntent().getStringExtra("password"));
 
         picker.addValueBar(valueBar);
         picker.addSaturationBar(saturationBar);
@@ -130,9 +135,9 @@ public class RoomActivity extends ActionBarActivity implements LightControllerDe
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 try {
                     if (isChecked) {
-                        lc.setLight(LightController.superWhite1, lightOn);
+                        room.setLight(TenjinRoom.superWhite1, lightOn);
                     } else {
-                        lc.setLight(LightController.superWhite1, 0);
+                        room.setLight(TenjinRoom.superWhite1, 0);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -145,9 +150,9 @@ public class RoomActivity extends ActionBarActivity implements LightControllerDe
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 try {
                     if (isChecked) {
-                        lc.setLight(LightController.superWhite2, lightOn);
+                        room.setLight(TenjinRoom.superWhite2, lightOn);
                     } else {
-                        lc.setLight(LightController.superWhite2, 0);
+                        room.setLight(TenjinRoom.superWhite2, 0);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -160,9 +165,9 @@ public class RoomActivity extends ActionBarActivity implements LightControllerDe
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 try {
                     if (isChecked) {
-                        lc.setLight(LightController.whiteMain, lightOn);
+                        room.setLight(TenjinRoom.whiteMain, lightOn);
                     } else {
-                        lc.setLight(LightController.whiteMain, 0);
+                        room.setLight(TenjinRoom.whiteMain, 0);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -198,9 +203,9 @@ public class RoomActivity extends ActionBarActivity implements LightControllerDe
 
     private void pickerChanged() {
         try {
-            lc.setLight(LightController.blue, Color.blue(picker.getColor()));
-            lc.setLight(LightController.red, Color.red(picker.getColor()));
-            lc.setLight(LightController.green, Color.green(picker.getColor()));
+            room.setLight(TenjinRoom.blue, Color.blue(picker.getColor()));
+            room.setLight(TenjinRoom.red, Color.red(picker.getColor()));
+            room.setLight(TenjinRoom.green, Color.green(picker.getColor()));
         } catch (Exception e) {
             e.printStackTrace();
         }

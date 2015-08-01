@@ -61,12 +61,23 @@ module.exports = function(app) {
 		res.send("alarm_stored");
 	});
 
-	app.get('/alarms/delete', function(req, res) {
+	app.get('/alarms/remove', function(req, res) {
 		alarms[req.query.name].job.cancel();
 		delete alarms[req.query.name];
 
 		saveAlarms();
 		res.send("alarm_deleted");
+	});
+
+	app.get('/alarms/invalidate', function(req, res) {
+		try {
+			alarms[req.query.name].job.cancel();
+		} catch (e) {}
+
+		alarms[req.query.name].date = moment().startOf('hour').fromNow().toDate();
+
+		saveAlarms();
+		res.send("alarm_invalidated");
 	});
 
 	app.get('/alarms/list', function(req, res) {

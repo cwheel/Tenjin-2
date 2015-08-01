@@ -11,18 +11,21 @@ import com.android.volley.toolbox.HttpClientStack;
 import com.android.volley.toolbox.HttpStack;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.gson.GsonBuilder;
 
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.params.HttpParams;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.net.CookieHandler;
 import java.net.CookieManager;
 import java.util.HashMap;
 import java.util.Map;
 
-public class LightController {
+public class TenjinRoom {
     private Activity activity;
     private RequestQueue queue;
 
@@ -51,6 +54,9 @@ public class LightController {
     public static final String rgbw2 = "lights/rgbw2";
     public static final String rgbw = "lights/rgbw1and2";
 
+    public static final String audioAlarm = "audio";
+    public static final String lightAlarm = "light-light";
+
     private HashMap<String, Integer> context;
     private Boolean isUsingProxy = false;
 
@@ -60,13 +66,13 @@ public class LightController {
     private HttpStack httpStack;
 
     //Connect to the light controller from the internal network
-    public LightController(Activity activ) {
+    public TenjinRoom(Activity activ) {
         activity = activ;
         queue = Volley.newRequestQueue(activ);
     }
 
     //Connect to the light controller from a remote network via ProxyRoute
-    public LightController(final Activity activ, String server, final String username, final String password) {
+    public TenjinRoom(final Activity activ, String server, final String username, final String password) {
         srv = server;
         activity = activ;
         isUsingProxy = true;
@@ -91,9 +97,9 @@ public class LightController {
             public void onResponse(String response) {
                 System.out.println(response);
               if (response.equals("AUTH_SUCCESS")) {
-                  ((LightControllerDelegate) activ).lightControllerProxyAuthSuccess();
+                  ((TenjinRoomDelegate) activ).roomLightProxyAuthSuccess();
               } else {
-                  ((LightControllerDelegate) activ).lightControllerProxyAuthFailure();
+                  ((TenjinRoomDelegate) activ).roomLightProxyAuthFailure();
               }
             }
         }, new Response.ErrorListener() {
@@ -119,7 +125,7 @@ public class LightController {
             throw new Exception("Invalid light type, use changeRGBWLight() instead");
         }
 
-        sendRequest(light + "?val=" + String.valueOf(val));
+        sendRequest(light, "val", String.valueOf(val));
     }
 
     public void setRGBWLight(String light, int r, int g, int b, int w) throws Exception {
@@ -127,18 +133,67 @@ public class LightController {
             throw new Exception("Invalid light type, use changeLight() instead");
         }
 
-        sendRequest(light + "?r=" + String.valueOf(r) + "&g=" + String.valueOf(g) + "&b=" + String.valueOf(b) + "&w=" + String.valueOf(w));
+        HashMap<String, String> prams = new HashMap<>();
+        prams.put("r", String.valueOf(r));
+        prams.put("g", String.valueOf(g));
+        prams.put("b", String.valueOf(b));
+        prams.put("w", String.valueOf(w));
+
+        sendRequest(light, prams);
     }
 
-    public void saveContext() {
+    public void saveLightingContext() {
         sendRequest("lights/cxsave");
     }
 
-    public void restoreContext() {
+    public void restoreLightingContext() {
         sendRequest("lights/cxrestore");
     }
 
-    public void fetchContext(final LightControllerDelegate caller) {
+    public void fetchRoomAlarms(final TenjinRoomDelegate delegate) {
+        StringRequest req = new StringRequest(Request.Method.GET, srv + "alarms/list", new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+               // GsonBuilder builder = new GsonBuilder();
+                //Object o = builder.create().fromJson(response, Object.class);
+                JSONObject json = null;
+                try {
+                    json  = new JSONObject(response);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                delegate.roomAlarmsUpdate(json);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(activity.getApplicationContext(), "Could not connect to the room", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        queue.add(req);
+    }
+
+    public void addRoomAlarm(String name, String timeStamp, String prettyDate, String type) {
+        HashMap<String, String> prams = new HashMap<>();
+        prams.put("name", name);
+        prams.put("timeStamp", timeStamp);
+        prams.put("prettyDate", prettyDate);
+        prams.put("type", type);
+
+        sendRequest("alarms/new", prams);
+    }
+
+    public void removeRoomAlarm(String name) {
+        sendRequest("alarms/remove", "name", name);
+    }
+
+    public void invalidateAlarm(String name) {
+        sendRequest("alarms/invalidate", "name", name);
+    }
+
+    public void fetchLightingContext(final TenjinRoomDelegate caller) {
         StringRequest req = new StringRequest(Request.Method.GET, srv + "lights/cxfetch", new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -158,7 +213,7 @@ public class LightController {
                     context.put("blue2", Integer.parseInt(vals[7]));
                     context.put("white3", Integer.parseInt(vals[8]));
 
-                    caller.lightControllerContextUpdated(context);
+                    caller.roomLightContextUpdated(context);
                 }
             }
         }, new Response.ErrorListener() {
@@ -187,5 +242,20 @@ public class LightController {
         });
 
         queue.add(req);
+    }
+
+    private void sendRequest(String request, HashMap<String, String> prams) {
+        request = request + "?";
+
+        for (String key : prams.keySet()) {
+            request = request + key + "=" + prams.get(key) + "&";
+        }
+
+        request = request.substring(0, request.length() - 1);
+        sendRequest(request);
+    }
+
+    private void sendRequest(String request, String property, String value) {
+        sendRequest(request + "?" + property + "=" + value);
     }
 }
