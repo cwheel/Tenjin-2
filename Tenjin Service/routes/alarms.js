@@ -100,7 +100,11 @@ module.exports = function(app) {
 			alarms[req.query.name].date = timeToday;
 		}
 
-		alarms[req.query.name].date = moment().startOf('hour').fromNow().toDate();
+		if (alarms[req.query.name].type == "audio") {
+			alarm = schedule.scheduleJob(alarms[req.query.name].date.toDate(), audioOnlyAlarm);
+		} else if (alarms[req.query.name].type == "audio-light") {
+			alarm = schedule.scheduleJob(alarms[req.query.name].date.toDate(), audioAndLightAlarm);
+		}
 
 		saveAlarms();
 		res.send("alarm_validated");
