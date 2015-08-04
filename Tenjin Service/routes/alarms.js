@@ -81,9 +81,24 @@ module.exports = function(app) {
 	});
 
 	app.get('/alarms/validate', function(req, res) {
-		try {
-			alarms[req.query.name].job.cancel();
-		} catch (e) {}
+		var old = moment(alarms[req.query.name].date);
+		var timeToday = moment();
+
+		timeToday.hour(old.hour());
+		timeToday.minute(old.minute());
+
+		//The date today already passed,the alarm must be for tommorow
+		if (timeToday < (new Date())) {
+			var timeTom = moment();
+			timeTom.add('days', 1);
+
+			timeTom.hour(old.hour());
+			timeTom.minute(old.minute());
+
+			alarms[req.query.name].date = timeTom;
+		} else {
+			alarms[req.query.name].date = timeToday;
+		}
 
 		alarms[req.query.name].date = moment().startOf('hour').fromNow().toDate();
 
