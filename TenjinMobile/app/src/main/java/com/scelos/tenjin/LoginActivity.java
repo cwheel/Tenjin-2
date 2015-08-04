@@ -19,10 +19,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONObject;
+
 import java.util.HashMap;
 
 
-public abstract class LoginActivity extends Activity implements TenjinRoomDelegate {
+public class LoginActivity extends Activity implements TenjinRoomDelegate {
     private EditText mUsernameView;
     private EditText mPasswordView;
     private View mProgressView;
@@ -100,6 +102,11 @@ public abstract class LoginActivity extends Activity implements TenjinRoomDelega
     public void roomLightProxyAuthFailure() {
         Toast.makeText(this.getApplicationContext(), "Invalid Credentials", Toast.LENGTH_SHORT).show();
         showProgress(false);
+    }
+
+    @Override
+    public void roomAlarmsUpdate(JSONObject resp) {
+
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)

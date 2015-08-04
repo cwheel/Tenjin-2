@@ -84,11 +84,11 @@ public class TenjinRoom {
 
         mClientConnectionManager = mDefaultHttpClient.getConnectionManager();
         mHttpParams = mDefaultHttpClient.getParams();
-        mThreadSafeClientConnManager = new ThreadSafeClientConnManager( mHttpParams, mClientConnectionManager.getSchemeRegistry() );
+        mThreadSafeClientConnManager = new ThreadSafeClientConnManager(mHttpParams, mClientConnectionManager.getSchemeRegistry());
 
-        mDefaultHttpClient = new DefaultHttpClient( mThreadSafeClientConnManager, mHttpParams );
+        mDefaultHttpClient = new DefaultHttpClient(mThreadSafeClientConnManager, mHttpParams);
 
-        httpStack = new HttpClientStack( mDefaultHttpClient );
+        httpStack = new HttpClientStack(mDefaultHttpClient);
 
         queue = Volley.newRequestQueue(activ, httpStack);
 
@@ -183,14 +183,22 @@ public class TenjinRoom {
         prams.put("type", type);
 
         sendRequest("alarms/new", prams);
+        fetchRoomAlarms((TenjinRoomDelegate) activity);
     }
 
     public void removeRoomAlarm(String name) {
         sendRequest("alarms/remove", "name", name);
+        fetchRoomAlarms((TenjinRoomDelegate) activity);
     }
 
     public void invalidateAlarm(String name) {
         sendRequest("alarms/invalidate", "name", name);
+        fetchRoomAlarms((TenjinRoomDelegate) activity);
+    }
+
+    public void validateAlarm(String name) {
+        sendRequest("alarms/validate", "name", name);
+        fetchRoomAlarms((TenjinRoomDelegate) activity);
     }
 
     public void fetchLightingContext(final TenjinRoomDelegate caller) {

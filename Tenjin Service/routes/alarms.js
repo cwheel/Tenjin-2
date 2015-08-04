@@ -80,6 +80,17 @@ module.exports = function(app) {
 		res.send("alarm_invalidated");
 	});
 
+	app.get('/alarms/validate', function(req, res) {
+		try {
+			alarms[req.query.name].job.cancel();
+		} catch (e) {}
+
+		alarms[req.query.name].date = moment().startOf('hour').fromNow().toDate();
+
+		saveAlarms();
+		res.send("alarm_validated");
+	});
+
 	app.get('/alarms/list', function(req, res) {
 		res.send(alarms);
 	});

@@ -7,21 +7,26 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TimePicker;
 
 import com.melnykov.fab.FloatingActionButton;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Iterator;
 
 
 public class AlarmsActivity extends ActionBarActivity implements TenjinRoomDelegate {
     private ListView alarmsView;
     private FloatingActionButton newAlarm;
     private TenjinRoom room;
+
+    private JSONObject alarms;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,10 +35,11 @@ public class AlarmsActivity extends ActionBarActivity implements TenjinRoomDeleg
 
         getWindow().getDecorView().setBackgroundColor(Color.parseColor("#3e3a4f"));
 
+        room = new TenjinRoom(this, Config.srv, this.getIntent().getStringExtra("username"), this.getIntent().getStringExtra("password"));
+
         String[] test = {"7:25", "8:30", "9:45"};
         alarmsView = (ListView)findViewById(R.id.listView);
         newAlarm = (FloatingActionButton)findViewById(R.id.newAlarm);
-        alarmsView.setAdapter(new AlarmsListAdapter(this, test));
 
         newAlarm.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,7 +76,7 @@ public class AlarmsActivity extends ActionBarActivity implements TenjinRoomDeleg
 
     @Override
     public void roomLightProxyAuthSuccess() {
-
+        room.fetchRoomAlarms(this);
     }
 
     @Override
@@ -80,6 +86,6 @@ public class AlarmsActivity extends ActionBarActivity implements TenjinRoomDeleg
 
     @Override
     public void roomAlarmsUpdate(JSONObject resp) {
-
+        alarmsView.setAdapter(new AlarmsListAdapter(this, resp, room));
     }
 }

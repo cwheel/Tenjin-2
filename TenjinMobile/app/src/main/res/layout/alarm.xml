@@ -8,14 +8,14 @@
     <Switch
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/switch1"
+        android:id="@+id/alarmEnabled"
         android:checked="false"
-        android:layout_alignBaseline="@+id/alarmTitle"
-        android:layout_alignBottom="@+id/alarmTitle"
+        android:layout_alignBaseline="@+id/alarmTime"
+        android:layout_alignBottom="@+id/alarmTime"
         android:layout_alignParentEnd="true" />
 
     <TextView
-        android:id="@+id/alarmTitle"
+        android:id="@+id/alarmTime"
         android:layout_gravity="center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -32,15 +32,15 @@
         android:id="@+id/textView3"
         android:layout_gravity="center_vertical"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/alarmTitle"
+        android:layout_below="@+id/alarmTime"
         android:textSize="5dp" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="Repeating Daily"
-        android:id="@+id/textView4"
+        android:text="Desciption"
+        android:id="@+id/alarmDesc"
         android:layout_gravity="center_vertical"
         android:layout_below="@+id/textView3"
         android:layout_alignParentStart="true" />
