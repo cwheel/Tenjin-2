@@ -5,14 +5,7 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal" >
 
-    <Switch
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/alarmEnabled"
-        android:checked="false"
-        android:layout_alignBaseline="@+id/alarmTime"
-        android:layout_alignBottom="@+id/alarmTime"
-        android:layout_alignParentEnd="true" />
+
 
     <TextView
         android:id="@+id/alarmTime"
@@ -22,7 +15,7 @@
         android:textSize="40dp"
         android:text="TextView"
         android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true" />
+        android:layout_toEndOf="@+id/textView3" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -43,6 +36,31 @@
         android:layout_gravity="center_vertical"
         android:layout_below="@+id/textView3"
         android:layout_alignParentStart="true"
-        android:layout_marginBottom="10dp" />
+        android:layout_marginBottom="15dp" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/alarmTypeButton"
+        android:src="@drawable/no_light"
+        android:scaleType="fitStart"
+        android:background="@null"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/alarmTime"
+        android:layout_alignBottom="@+id/alarmEnabled"
+        android:clickable="false"
+        android:paddingLeft="13dp"
+        android:paddingRight="18dp"
+        android:paddingTop="18dp"
+        android:paddingBottom="18dp" />
+
+    <Switch
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/alarmEnabled"
+        android:checked="false"
+        android:layout_alignBaseline="@+id/alarmTime"
+        android:layout_alignBottom="@+id/alarmTime"
+        android:layout_alignParentEnd="true" />
 
 </RelativeLayout>

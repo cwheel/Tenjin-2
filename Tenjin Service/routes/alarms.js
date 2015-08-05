@@ -62,7 +62,10 @@ module.exports = function(app) {
 	});
 
 	app.get('/alarms/remove', function(req, res) {
-		alarms[req.query.name].job.cancel();
+		try {
+			alarms[req.query.name].job.cancel();
+		} catch (e) {}
+		
 		delete alarms[req.query.name];
 
 		saveAlarms();
@@ -78,6 +81,13 @@ module.exports = function(app) {
 
 		saveAlarms();
 		res.send("alarm_invalidated");
+	});
+
+	app.get('/alarms/settype', function(req, res) {
+		alarms[req.query.name].type = req.query.type;
+
+		saveAlarms();
+		res.send("alarm_stored");
 	});
 
 	app.get('/alarms/validate', function(req, res) {

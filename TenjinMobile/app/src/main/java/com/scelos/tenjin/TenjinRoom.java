@@ -182,7 +182,6 @@ public class TenjinRoom {
         prams.put("type", type);
 
         sendRequest("alarms/new", prams);
-        fetchRoomAlarms((TenjinRoomDelegate) activity);
     }
 
     public void removeRoomAlarm(String name) {
@@ -195,6 +194,14 @@ public class TenjinRoom {
 
     public void validateAlarm(String name) {
         sendRequest("alarms/validate", "name", name);
+    }
+
+    public void setAlarmType(String name, String type) {
+        HashMap<String, String> prams = new HashMap<>();
+        prams.put("name", name);
+        prams.put("type", type);
+
+        sendRequest("alarms/settype", prams);
     }
 
     public void fetchLightingContext(final TenjinRoomDelegate caller) {
@@ -243,7 +250,7 @@ public class TenjinRoom {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(activity.getApplicationContext(), "Could not connect to the room server", Toast.LENGTH_SHORT).show();
+
             }
         });
 
