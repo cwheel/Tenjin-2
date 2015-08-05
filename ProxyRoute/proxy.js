@@ -14,6 +14,7 @@ var io = require('socket.io')(http);
 
 var appSocket;
 var config;
+var publicRoutes = [];
 
 //Check for a valid config file
 if (fs.existsSync("config.json")) {
@@ -87,11 +88,18 @@ io.on('connection', function(socket){
 			socket.disconnect();
 		} else {
 			appSocket = socket;
+			appSocket.on('publicRoutes', setPublicRoutes);
 		}
 	} else {
 		appSocket = socket;
+		appSocket.on('publicRoutes', setPublicRoutes);
 	}
 });
+
+//Configure public routes
+function setPublicRoutes(pRoutes) {
+	publicRoutes = pRoutes;
+}
 
 //Watch for proxy client disconnects
 io.on('disconnect', function(socket){
@@ -122,7 +130,17 @@ app.get('/login/failure', function(req, res){res.send('AUTH_FAILURE');});
 
 //Handle all incoming GET requests and proxy them to the NAT'd application over a socket
 app.get('*', function(req, res) {
-	if (req.isAuthenticated()) {
+	var allowed = req.isAuthenticated();
+
+	if (!allowed) {
+		for (var i = publicRoutes.length - 1; i >= 0; i--) {
+			if (req.originalUrl.indexOf(publicRoutes[i]) === 0) {
+				allowed = true;
+			}
+		}
+	}
+
+	if (allowed) {
     	if (appSocket) {
     		//Send the GET request to the connected application
     		appSocket.emit("GET", {originalUrl: req.originalUrl, query: req.query});

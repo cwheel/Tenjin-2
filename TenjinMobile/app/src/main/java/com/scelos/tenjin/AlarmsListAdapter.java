@@ -9,8 +9,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CompoundButton;
+import android.widget.ImageButton;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -25,7 +27,6 @@ import java.util.Locale;
 public class AlarmsListAdapter extends BaseAdapter {
     private JSONObject alarms;
     Context context;
-    int [] imageId;
     private Typeface robotoFont;
     private static LayoutInflater inflater = null;
     private TenjinRoom room;
@@ -106,31 +107,52 @@ public class AlarmsListAdapter extends BaseAdapter {
         TextView alarmTime;
         Switch alarmEnabled;
         TextView alarmDesc;
+        ImageButton alarmTypeButton;
     }
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        AlarmRow row = new AlarmRow();
+        final AlarmRow row = new AlarmRow();
 
         View rowView;
         rowView = inflater.inflate(R.layout.alarm, parent, false);
         row.alarmEnabled = (Switch)rowView.findViewById(R.id.alarmEnabled);
         row.alarmTime = (TextView)rowView.findViewById(R.id.alarmTime);
         row.alarmDesc = (TextView)rowView.findViewById(R.id.alarmDesc);
+        row.alarmTypeButton = (ImageButton)rowView.findViewById(R.id.alarmTypeButton);
 
         row.alarmTime.setTypeface(robotoFont);
 
         Date alarmDate = new Date();
         try {
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS", Locale.ENGLISH);
-            alarmDate = format.parse(((JSONObject)getItem(position)).getString("date"));
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.ENGLISH);
+            alarmDate = format.parse(((JSONObject)getItem(position)).getString("date").replace(Config.timezone,""));
         } catch (JSONException e) {
             e.printStackTrace();
         } catch (ParseException e) {
             e.printStackTrace();
         }
 
-        row.alarmTime.setText(alarmDate.getHours() + ":" + alarmDate.getMinutes());
+        int min = alarmDate.getMinutes();
+
+        if (min < 10) {
+            row.alarmTime.setText(alarmDate.getHours() + ":0" + min);
+        } else {
+            row.alarmTime.setText(alarmDate.getHours() + ":" + min);
+        }
+
+        String type = TenjinRoom.audioAlarm;
+        try {
+            type = ((JSONObject)getItem(position)).getString("type");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        if (type.equals(TenjinRoom.audioAlarm)) {
+            row.alarmTypeButton.setImageResource(R.drawable.no_light);
+        } else {
+            row.alarmTypeButton.setImageResource(R.drawable.light);
+        }
 
         DateFormat dateFormat = new SimpleDateFormat("EEEE, d MMM yyyy");
         row.alarmDesc.setText(dateFormat.format(alarmDate));
@@ -140,6 +162,26 @@ public class AlarmsListAdapter extends BaseAdapter {
         } else {
             row.alarmEnabled.setChecked(true);
         }
+
+        row.alarmTypeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String type = TenjinRoom.audioAlarm;
+                try {
+                    type = ((JSONObject)getItem(position)).getString("type");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                if (type.equals(TenjinRoom.audioAlarm)) {
+                    room.setAlarmType(getAlarmTitle(position), TenjinRoom.lightAlarm);
+                    row.alarmTypeButton.setImageResource(R.drawable.light);
+                } else {
+                    room.setAlarmType(getAlarmTitle(position), TenjinRoom.audioAlarm);
+                    row.alarmTypeButton.setImageResource(R.drawable.no_light);
+                }
+            }
+        });
 
         row.alarmEnabled.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -156,6 +198,15 @@ public class AlarmsListAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
 
+            }
+        });
+
+        rowView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Toast.makeText(context.getApplicationContext(), "Alarm Deleted", Toast.LENGTH_SHORT).show();
+                room.removeRoomAlarm(getAlarmTitle(position));
+                return true;
             }
         });
 

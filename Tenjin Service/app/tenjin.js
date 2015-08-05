@@ -70,8 +70,21 @@ tenjin.config(['$routeProvider',
             $scope.time = hour + ":" + min;
           } else {
             var now = new Date();
+            var monthNames = ["January", "February", "March", "April", "May", "June","July", "August", "September", "October", "November", "December"];
+
             var min = now.getMinutes();
             var hour = now.getHours();
+            $scope.day = now.getDay();
+            if ($scope.day.toString().slice(-1) == 1){
+              $scope.ending = "st";
+            }else if ($scope.day.toString().slice(-1) == 2){
+              $scope.ending = "nd";
+            } else if ($scope.day.toString().slice(-1) == 3){
+              $scope.ending = "rd";
+            } else {
+              $scope.ending = "th";
+            }
+            $scope.month = monthNames[now.getMonth()];
             var section = now.getHours() > 12 ? " PM" : " AM";
 
             if (min < 10) { 
