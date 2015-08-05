@@ -1,6 +1,6 @@
 var request = require("request");
 
-module.exports = function(app, server, accessToken, routes) {
+module.exports = function(app, server, accessToken, routes, pubRoutes) {
 	var socket = require('socket.io-client')('https://' + server + ":4000");
 
 	//We connected to the proxy server
@@ -11,15 +11,16 @@ module.exports = function(app, server, accessToken, routes) {
 		socket.emit('authentication', {token : accessToken});
 		socket.on('authenticated', function() {
 	    	console.log("=> Authenticated (SSL) with ProxyRoute server at " + server + "!");
-	  	});
+        socket.emit('publicRoutes', pubRoutes);
+	  });
 	});
 
 	//A GET request was passed through
   	socket.on('GET', function(req) {
   		//Verify that the route is approved for proxying
   		var verified = false;
-  		for (var i = routes.length - 1; i >= 0; i--) {
-  			if (req.originalUrl.indexOf(routes[i]) === 0) {
+  		for (var i = privRoutes.length - 1; i >= 0; i--) {
+  			if (req.originalUrl.indexOf(privRoutes[i]) === 0) {
   				verified = true;
   				break;
   			}

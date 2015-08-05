@@ -2,23 +2,23 @@ package com.scelos.tenjin;
 
 import android.app.TimePickerDialog;
 import android.graphics.Color;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TimePicker;
 
 import com.melnykov.fab.FloatingActionButton;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.Locale;
 
 
 public class AlarmsActivity extends ActionBarActivity implements TenjinRoomDelegate {
@@ -50,7 +50,19 @@ public class AlarmsActivity extends ActionBarActivity implements TenjinRoomDeleg
                 TimePickerDialog mTimePicker = new TimePickerDialog(AlarmsActivity.this, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+                        Date occurenceToday = new Date();
+                        occurenceToday.setHours(selectedHour);
+                        occurenceToday.setMinutes(selectedMinute);
 
+                        if (occurenceToday.before(new Date())) {
+                            Calendar c = Calendar.getInstance();
+                            c.setTime(occurenceToday);
+                            c.add(Calendar.DATE, 1);
+                            occurenceToday = c.getTime();
+                        }
+
+                        SimpleDateFormat jsFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.ENGLISH);
+                        room.addRoomAlarm(String.valueOf(occurenceToday.toString().hashCode()), jsFormat.format(occurenceToday) + Config.timezone, "Today", TenjinRoom.audioAlarm);
                     }
                 }, hour, minute, true);
                 mTimePicker.show();

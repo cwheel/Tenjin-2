@@ -25,7 +25,6 @@ import java.util.Locale;
 public class AlarmsListAdapter extends BaseAdapter {
     private JSONObject alarms;
     Context context;
-    int [] imageId;
     private Typeface robotoFont;
     private static LayoutInflater inflater = null;
     private TenjinRoom room;
@@ -122,8 +121,9 @@ public class AlarmsListAdapter extends BaseAdapter {
 
         Date alarmDate = new Date();
         try {
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS", Locale.ENGLISH);
-            alarmDate = format.parse(((JSONObject)getItem(position)).getString("date"));
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.ENGLISH);
+            alarmDate = format.parse(((JSONObject)getItem(position)).getString("date").replace(Config.timezone,""));
+            System.out.println(alarmDate.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         } catch (ParseException e) {

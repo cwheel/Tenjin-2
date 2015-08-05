@@ -10,7 +10,7 @@ module.exports = function(app) {
 			alarms =  {};
 		} else {
 			alarms = JSON.parse(data);
-			console.log("=> Loaded alarms db!")
+			console.log("=> Loaded alarms database!")
 
 			for (var alarm in alarms) {
 		  	    if (alarms.hasOwnProperty(alarm)) {
@@ -55,7 +55,7 @@ module.exports = function(app) {
 			alarm = schedule.scheduleJob(execDate.toDate(), audioAndLightAlarm);
 		}
 
-		alarms[req.query.name] = {job: alarm, date: execDate, type: req.query.type, prettyDate: req.query.prettyDate};
+		alarms[req.query.name] = {job: alarm, date: execDate.format(), type: req.query.type, prettyDate: req.query.prettyDate};
 
 		saveAlarms();
 		res.send("alarm_stored");
@@ -74,7 +74,7 @@ module.exports = function(app) {
 			alarms[req.query.name].job.cancel();
 		} catch (e) {}
 
-		alarms[req.query.name].date = moment().startOf('hour').fromNow().toDate();
+		alarms[req.query.name].date = moment(alarms[req.query.name].date).subtract(1, 'days').format();
 
 		saveAlarms();
 		res.send("alarm_invalidated");
@@ -90,20 +90,20 @@ module.exports = function(app) {
 		//The date today already passed,the alarm must be for tommorow
 		if (timeToday < (new Date())) {
 			var timeTom = moment();
-			timeTom.add('days', 1);
+			timeTom.add(1, 'days');
 
 			timeTom.hour(old.hour());
 			timeTom.minute(old.minute());
 
-			alarms[req.query.name].date = timeTom;
+			alarms[req.query.name].date = timeTom.format();
 		} else {
-			alarms[req.query.name].date = timeToday;
+			alarms[req.query.name].date = timeToday.format();
 		}
 
 		if (alarms[req.query.name].type == "audio") {
-			alarm = schedule.scheduleJob(alarms[req.query.name].date.toDate(), audioOnlyAlarm);
+			alarm = schedule.scheduleJob(moment(alarms[req.query.name].date).toDate(), audioOnlyAlarm);
 		} else if (alarms[req.query.name].type == "audio-light") {
-			alarm = schedule.scheduleJob(alarms[req.query.name].date.toDate(), audioAndLightAlarm);
+			alarm = schedule.scheduleJob(moment(alarms[req.query.name].date).toDate(), audioAndLightAlarm);
 		}
 
 		saveAlarms();

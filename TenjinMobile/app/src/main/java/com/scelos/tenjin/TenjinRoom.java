@@ -95,7 +95,6 @@ public class TenjinRoom {
         StringRequest login = new StringRequest(Request.Method.POST, srv + "login", new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                System.out.println(response);
               if (response.equals("AUTH_SUCCESS")) {
                   ((TenjinRoomDelegate) activ).roomLightProxyAuthSuccess();
               } else {
@@ -105,7 +104,7 @@ public class TenjinRoom {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(activity.getApplicationContext(), "Could not connect to the lighting proxy", Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity.getApplicationContext(), "Could not connect to the room", Toast.LENGTH_SHORT).show();
             }
         }) {
             protected Map<String, String> getParams() throws com.android.volley.AuthFailureError {
@@ -178,7 +177,7 @@ public class TenjinRoom {
     public void addRoomAlarm(String name, String timeStamp, String prettyDate, String type) {
         HashMap<String, String> prams = new HashMap<>();
         prams.put("name", name);
-        prams.put("timeStamp", timeStamp);
+        prams.put("date", timeStamp);
         prams.put("prettyDate", prettyDate);
         prams.put("type", type);
 
@@ -188,17 +187,14 @@ public class TenjinRoom {
 
     public void removeRoomAlarm(String name) {
         sendRequest("alarms/remove", "name", name);
-        fetchRoomAlarms((TenjinRoomDelegate) activity);
     }
 
     public void invalidateAlarm(String name) {
         sendRequest("alarms/invalidate", "name", name);
-        fetchRoomAlarms((TenjinRoomDelegate) activity);
     }
 
     public void validateAlarm(String name) {
         sendRequest("alarms/validate", "name", name);
-        fetchRoomAlarms((TenjinRoomDelegate) activity);
     }
 
     public void fetchLightingContext(final TenjinRoomDelegate caller) {
@@ -206,7 +202,7 @@ public class TenjinRoom {
             @Override
             public void onResponse(String response) {
                 if (response.equals("LC_unreachable")) {
-                    Toast.makeText(activity.getApplicationContext(), "Could not contact the lights controller", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity.getApplicationContext(), "Could not contact the lighting controller", Toast.LENGTH_SHORT).show();
                 } else {
                     context = new HashMap<String, Integer>();
                     String[] vals = response.split(",");
@@ -227,7 +223,7 @@ public class TenjinRoom {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(activity.getApplicationContext(), "Could not connect to the lighting server", Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity.getApplicationContext(), "Could not connect to the room controller", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -239,13 +235,15 @@ public class TenjinRoom {
             @Override
             public void onResponse(String response) {
                 if (response.equals("LC_unreachable")) {
-                    Toast.makeText(activity.getApplicationContext(), "Could not contact the lights controller", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity.getApplicationContext(), "Could not contact the lighting controller", Toast.LENGTH_SHORT).show();
+                } else if (response.equals("alarm_deleted") || response.equals("alarm_stored") || response.equals("alarm_invalidated") || response.equals("alarm_validated")) {
+                    fetchRoomAlarms((TenjinRoomDelegate) activity);
                 }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(activity.getApplicationContext(), "Could not connect to the lighting server", Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity.getApplicationContext(), "Could not connect to the room server", Toast.LENGTH_SHORT).show();
             }
         });
 
