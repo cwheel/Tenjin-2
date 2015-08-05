@@ -4,36 +4,27 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.LoaderManager.LoaderCallbacks;
-import android.content.ContentResolver;
-import android.content.CursorLoader;
 import android.content.Intent;
-import android.content.Loader;
-import android.database.Cursor;
-import android.net.Uri;
-import android.os.AsyncTask;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.ContactsContract;
-import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
+import org.json.JSONObject;
+
 import java.util.HashMap;
-import java.util.List;
 
 
-public class LoginActivity extends Activity implements LightControllerDelegate {
+public class LoginActivity extends Activity implements TenjinRoomDelegate {
     private EditText mUsernameView;
     private EditText mPasswordView;
     private View mProgressView;
@@ -59,6 +50,8 @@ public class LoginActivity extends Activity implements LightControllerDelegate {
             }
         });
 
+        getWindow().getDecorView().setBackgroundColor(Color.parseColor("#3e3a4f"));
+
         Button login = (Button) findViewById(R.id.sign_in_button);
         login.setOnClickListener(new OnClickListener() {
             @Override
@@ -66,6 +59,7 @@ public class LoginActivity extends Activity implements LightControllerDelegate {
                 attemptLogin();
             }
         });
+        login.getBackground().setColorFilter(Color.parseColor("#2c273e"), PorterDuff.Mode.MULTIPLY);
 
 
         mLoginFormView = findViewById(R.id.login_form);
@@ -83,16 +77,16 @@ public class LoginActivity extends Activity implements LightControllerDelegate {
 
         showProgress(true);
 
-        LightController lc = new LightController(this, Config.srv, mUsernameView.getText().toString(), mPasswordView.getText().toString());
+        TenjinRoom room = new TenjinRoom(this, Config.srv, mUsernameView.getText().toString(), mPasswordView.getText().toString());
     }
 
     @Override
-    public void lightControllerContextUpdated(HashMap context) {
+    public void roomLightContextUpdated(HashMap context) {
 
     }
 
     @Override
-    public void lightControllerProxyAuthSuccess() {
+    public void roomLightProxyAuthSuccess() {
         showProgress(false);
 
         Intent i = new Intent(this.getApplicationContext(), RoomActivity.class);
@@ -105,9 +99,14 @@ public class LoginActivity extends Activity implements LightControllerDelegate {
     }
 
     @Override
-    public void lightControllerProxyAuthFailure() {
+    public void roomLightProxyAuthFailure() {
         Toast.makeText(this.getApplicationContext(), "Invalid Credentials", Toast.LENGTH_SHORT).show();
         showProgress(false);
+    }
+
+    @Override
+    public void roomAlarmsUpdate(JSONObject resp) {
+
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)

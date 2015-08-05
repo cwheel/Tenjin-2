@@ -1,7 +1,7 @@
 var request = require("request");
 
 module.exports = function(app, server, accessToken, routes) {
-	var socket = require('socket.io-client')('http://' + server + ":4000");
+	var socket = require('socket.io-client')('https://' + server + ":4000");
 
 	//We connected to the proxy server
 	socket.on('connect', function() {
@@ -10,7 +10,7 @@ module.exports = function(app, server, accessToken, routes) {
 		//Attempt to authenticate with the provided key
 		socket.emit('authentication', {token : accessToken});
 		socket.on('authenticated', function() {
-	    	console.log("=> Authenticated with ProxyRoute server at " + server + "!");
+	    	console.log("=> Authenticated (SSL) with ProxyRoute server at " + server + "!");
 	  	});
 	});
 

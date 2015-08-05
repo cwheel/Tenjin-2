@@ -9,7 +9,7 @@ var cookieParser = require('cookie-parser');
 var sha512 = require('js-sha512');
 
 var app = express();
-var http = require('http').Server(app);
+var http = require('https').Server({key: fs.readFileSync("/etc/ssl/cert/priv.key"), cert: fs.readFileSync("/etc/ssl/cert/cert.crt")}, app);
 var io = require('socket.io')(http);
 
 var appSocket;
@@ -78,7 +78,7 @@ function socketAuthReq(data, callback) {
 
 //Listen for incoming proxy applications
 io.on('connection', function(socket){
-	console.log("=> Application connected from " + socket.request.connection._peername.address + ":" + socket.request.connection._peername.port);
+	console.log("=> Application connected from " + socket.request.connection.remoteAddress + ":" + socket.request.connection.remotePort);
 
 	//Ensure we don't already have an application connected
 	if (appSocket) {
@@ -95,7 +95,7 @@ io.on('connection', function(socket){
 
 //Watch for proxy client disconnects
 io.on('disconnect', function(socket){
-	console.log("=> Application at " + socket.request.connection._peername.address + ":" + socket.request.connection._peername.port + " disconnected");
+	console.log("=> Application at " + socket.request.connection.remoteAddress + ":" + socket.request.connection.remotePort + " disconnected");
 });
 
 //Passport auth-request
@@ -122,21 +122,27 @@ app.get('/login/failure', function(req, res){res.send('AUTH_FAILURE');});
 
 //Handle all incoming GET requests and proxy them to the NAT'd application over a socket
 app.get('*', function(req, res) {
-	if (appSocket) {
-		//Send the GET request to the connected application
-		appSocket.emit("GET", {originalUrl: req.originalUrl, query: req.query});
+	if (req.isAuthenticated()) {
+    	if (appSocket) {
+    		//Send the GET request to the connected application
+    		appSocket.emit("GET", {originalUrl: req.originalUrl, query: req.query});
 
-		//Handler for the applications response
-		var proxyResponse = function(resp) {
-			res.send(resp);
-			appSocket.removeListener('GET_RESP', proxyResponse);
-		};
+    		//Handler for the applications response
+    		var proxyResponse = function(resp) {
+    			res.send(resp);
+    			appSocket.removeListener('GET_RESP', proxyResponse);
+    		};
 
-		//Add the handler
-		appSocket.on('GET_RESP', proxyResponse);
+    		//Add the handler
+    		appSocket.on('GET_RESP', proxyResponse);
+    	} else {
+    		res.send("REMOTE_APP_NOT_CONNECTED");
+    	}
 	} else {
-		res.send("REMOTE_APP_NOT_CONNECTED");
+		res.status(401).send("Authentication Error");
 	}
+
+	
 });
 
 //Passport serialization

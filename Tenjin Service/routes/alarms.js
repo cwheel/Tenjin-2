@@ -61,12 +61,53 @@ module.exports = function(app) {
 		res.send("alarm_stored");
 	});
 
-	app.get('/alarms/delete', function(req, res) {
+	app.get('/alarms/remove', function(req, res) {
 		alarms[req.query.name].job.cancel();
 		delete alarms[req.query.name];
 
 		saveAlarms();
 		res.send("alarm_deleted");
+	});
+
+	app.get('/alarms/invalidate', function(req, res) {
+		try {
+			alarms[req.query.name].job.cancel();
+		} catch (e) {}
+
+		alarms[req.query.name].date = moment().startOf('hour').fromNow().toDate();
+
+		saveAlarms();
+		res.send("alarm_invalidated");
+	});
+
+	app.get('/alarms/validate', function(req, res) {
+		var old = moment(alarms[req.query.name].date);
+		var timeToday = moment();
+
+		timeToday.hour(old.hour());
+		timeToday.minute(old.minute());
+
+		//The date today already passed,the alarm must be for tommorow
+		if (timeToday < (new Date())) {
+			var timeTom = moment();
+			timeTom.add('days', 1);
+
+			timeTom.hour(old.hour());
+			timeTom.minute(old.minute());
+
+			alarms[req.query.name].date = timeTom;
+		} else {
+			alarms[req.query.name].date = timeToday;
+		}
+
+		if (alarms[req.query.name].type == "audio") {
+			alarm = schedule.scheduleJob(alarms[req.query.name].date.toDate(), audioOnlyAlarm);
+		} else if (alarms[req.query.name].type == "audio-light") {
+			alarm = schedule.scheduleJob(alarms[req.query.name].date.toDate(), audioAndLightAlarm);
+		}
+
+		saveAlarms();
+		res.send("alarm_validated");
 	});
 
 	app.get('/alarms/list', function(req, res) {
