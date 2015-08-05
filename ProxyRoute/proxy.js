@@ -88,10 +88,10 @@ io.on('connection', function(socket){
 			socket.disconnect();
 		} else {
 			appSocket = socket;
-
 			appSocket.on('publicRoutes', setPublicRoutes);
 		}
 	} else {
+		appSocket = socket;
 		appSocket.on('publicRoutes', setPublicRoutes);
 	}
 });
