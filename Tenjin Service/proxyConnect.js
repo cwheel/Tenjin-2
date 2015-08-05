@@ -1,6 +1,6 @@
 var request = require("request");
 
-module.exports = function(app, server, accessToken, routes, pubRoutes) {
+module.exports = function(app, server, accessToken, privRoutes, pubRoutes) {
 	var socket = require('socket.io-client')('https://' + server + ":4000");
 
 	//We connected to the proxy server
@@ -25,6 +25,15 @@ module.exports = function(app, server, accessToken, routes, pubRoutes) {
   				break;
   			}
   		}
+
+      if (!verified) {
+        for (var i = pubRoutes.length - 1; i >= 0; i--) {
+          if (req.originalUrl.indexOf(pubRoutes[i]) === 0) {
+            verified = true;
+            break;
+          }
+        }
+      }
 
   		//If we coulden't verify that the request was allowed, deny it
   		if (!verified) {
