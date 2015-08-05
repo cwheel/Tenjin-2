@@ -1,11 +1,13 @@
 var schedule = require('node-schedule');
 var moment = require('moment');
 var fs = require("fs");
+var player = require('play-sound')(opts = {});
 
 module.exports = function(app) {
 	var alarms;
 
 	fs.readFile('alarms.json', 'utf8', function (err,data) {
+		player.play('alarms/Helium.ogg')
 		if (err) {
 			alarms =  {};
 		} else {
