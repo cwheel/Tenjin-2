@@ -29,6 +29,7 @@ module.exports = function(app){
 				if (intensity >= 255){
 					intensity = 255;
 					increasing = false;
+
 				} else if (intensity <= 0){
 					intensity = 0;
 					increasing = true;

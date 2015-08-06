@@ -152,6 +152,101 @@ module.exports = function(app) {
 	});
 
 	app.get('/alarms/list', function(req, res) {
+		if (app.lcConnected && app.lightsController.isOpen()) {
+
+			// 
+			var step = 0;
+			for(step; step < 460; step++){
+				// Initialize Color Values
+				var red = 0;
+				var green = 0;
+				var blue = 0;
+				var white = 0;
+
+				// Loop 1 Red 
+				if (step < 255){
+					for(var i = 0; i < step;i++){
+						red++
+						if (i % 50 == 0){
+							green++;
+						}
+					}
+				}
+				// Loop 2 Yellow
+				else if( step < 370){
+					red = 255;
+					green = 6;
+					for (var i = 0;  i < (step - 255); i++){
+						green++;
+					}
+				}
+				// Loop 3 
+				else if (step < 460){
+						red = 255;
+						green = 120;
+					green++;
+					if (i % 5 == 0){
+						blue++;
+					}
+				}
+				
+				console.log("step: " + step+ "red: "+ red+ " green: " +green  );
+			app.lightsController.write("23," + red + "," + green + "," +  blue + "," + white + ";");
+		}
+			/*
+			for(var i = 0; i < 255;i++){
+				red++;
+				if (i % 50 == 0){
+					green++;
+				}
+				app.lightsController.write("23," + red + "," + green + "," +  blue + "," + 0 + ";");
+			}
+			for(var i = 0; i < 50; i++){
+				green++;
+				app.lightsController.write("23," + red + "," + green + "," +  blue + "," + 0 + ";");
+			} 
+			for(var i = 0; i < 155; i++){
+				if (green == 255){
+					break;
+				}else{
+					green++;
+					if (i % 5 == 0){
+						blue++;
+					}
+				app.lightsController.write("23," + red + "," + green + "," +  blue + "," + 0 + ";");
+				}
+			}
+			
+			for (var i = 0; i < 64;i++){
+				if (green == 255){
+					break;
+				}
+					green++;
+					if (i % 3 == 0){
+						blue++;
+					}
+				app.lightsController.write("23," + red + "," + green + "," +  blue + "," + 0 + ";");
+				}
+			while (green != 255){
+				blue++;
+				if (blue % 4  == 0){
+					green++;
+				}
+				app.lightsController.write("23," + red + "," + green + "," +  blue + "," + 0 + ";");
+			}
+			while(blue != 255){
+				blue++;
+				app.lightsController.write("23," + red + "," + green + "," +  blue + "," + 0 + ";");
+
+			}
+			while(white != 255){
+				white++;
+				app.lightsController.write("23," + red + "," + green + "," +  blue + "," + white + ";");
+			}
+ */
+		} else {
+		}
 		res.send(alarms);
+
 	});
 };
