@@ -1,13 +1,15 @@
 var schedule = require('node-schedule');
 var moment = require('moment');
 var fs = require("fs");
-var player = require('play-sound')(opts = {});
+var lame = require('lame');
+var Speaker = require('speaker');
 
 module.exports = function(app) {
 	var alarms;
+	var playingAlarm = null;
+	var playingAlarmCount = -1;
 
 	fs.readFile('alarms.json', 'utf8', function (err,data) {
-		player.play('alarms/Helium.ogg')
 		if (err) {
 			alarms =  {};
 		} else {
@@ -38,15 +40,34 @@ module.exports = function(app) {
 		});
 	}
 
+	function runAlarm() {
+		try {
+			playingAlarm.end();
+			playingAlarm = null;
+		} catch (e) {}
+
+		if (playingAlarmCount == -1) {
+			return;
+		} else {
+			playingAlarm = fs.createReadStream('alarms/Helium.mp3').pipe(new lame.Decoder).pipe(new Speaker);
+			playingAlarmCount++;
+		}
+
+		if (playingAlarmCount < 5 && playingAlarmCount > 0) {
+			setTimeout(runAlarm, 9000);
+		}
+	}
+
 	function audioOnlyAlarm() {
-		console.log("alarm triggered");
+		playingAlarmCount = 0;
+		runAlarm();
 	}
 
 	function audioAndLightAlarm() {
-		console.log("alarm triggered");
+		playingAlarmCount = 0;
+		runAlarm();
 	}
 
-	//Uses YYYY-MM-DDTHH:MM:SS format
 	app.get('/alarms/new', function(req, res) {
 		var execDate = moment(req.query.date);
 		var alarm;
@@ -90,6 +111,14 @@ module.exports = function(app) {
 
 		saveAlarms();
 		res.send("alarm_stored");
+	});
+
+	app.get('/alarms/off', function(req, res) {
+		playingAlarm.end();
+		playingAlarm = null;
+		playingAlarmCount = -1;
+
+		res.send("alarm_off");
 	});
 
 	app.get('/alarms/validate', function(req, res) {

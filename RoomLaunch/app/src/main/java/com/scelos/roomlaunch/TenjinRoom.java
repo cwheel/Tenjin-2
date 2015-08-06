@@ -1,4 +1,4 @@
-package com.scelos.tenjin;
+package com.scelos.roomlaunch;
 
 import android.app.Activity;
 import android.widget.Toast;
@@ -11,7 +11,6 @@ import com.android.volley.toolbox.HttpClientStack;
 import com.android.volley.toolbox.HttpStack;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.gson.GsonBuilder;
 
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -95,11 +94,11 @@ public class TenjinRoom {
         StringRequest login = new StringRequest(Request.Method.POST, srv + "login", new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-              if (response.equals("AUTH_SUCCESS")) {
-                  ((TenjinRoomDelegate) activ).roomLightProxyAuthSuccess();
-              } else {
-                  ((TenjinRoomDelegate) activ).roomLightProxyAuthFailure();
-              }
+                if (response.equals("AUTH_SUCCESS")) {
+                    ((TenjinRoomDelegate) activ).roomLightProxyAuthSuccess();
+                } else {
+                    ((TenjinRoomDelegate) activ).roomLightProxyAuthFailure();
+                }
             }
         }, new Response.ErrorListener() {
             @Override
@@ -153,7 +152,7 @@ public class TenjinRoom {
         StringRequest req = new StringRequest(Request.Method.GET, srv + "alarms/list", new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-               // GsonBuilder builder = new GsonBuilder();
+                // GsonBuilder builder = new GsonBuilder();
                 //Object o = builder.create().fromJson(response, Object.class);
                 JSONObject json = null;
                 try {

@@ -16,6 +16,8 @@
     "striptags": "latest",
     "node-schedule": "latest",
     "moment": "latest",
-    "play-sound": "latest"
+    "player": "latest",
+    "lame": "latest",
+    "speaker": "latest"
   }
 }
