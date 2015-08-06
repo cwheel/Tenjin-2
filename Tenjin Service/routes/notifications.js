@@ -8,14 +8,14 @@ module.exports = function(app){
 		res.send(notifications);
 	});
 	app.get("/notf/add", function(req,res){
-		notitications.push(req.body);
+		notifications.push(req.body);
+		console.log(req.body);
 		if (app.lcConnected && app.lightsController.isOpen()) {
-			var step = 1;
-
+			var step = 8;
 			var revolutions = 0;
 			var intensity = 1;
 			var increasing =  true;
-			while (revolutions < 4){
+			while (revolutions < 8){
 				app.lightsController.write("11," + intensity + ";");
 				if (increasing){
 					intensity += step;
@@ -25,7 +25,7 @@ module.exports = function(app){
 				if (intensity >= 255){
 					intensity = 255;
 					increasing = false;
-				}else if (intensity <= 0){
+				}else if (intensity  <= 0){
 					intensity = 0;
 					increasing = true;
 					revolutions++;
