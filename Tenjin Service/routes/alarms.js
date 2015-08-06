@@ -173,7 +173,7 @@ module.exports = function(app) {
 					}
 				}
 				// Loop 2 Yellow
-				else if( step < 370){
+				else if( step < 350){
 					red = 255;
 					green = 6;
 					for (var i = 0;  i < (step - 255); i++){
@@ -182,15 +182,17 @@ module.exports = function(app) {
 				}
 				// Loop 3 
 				else if (step < 460){
-						red = 255;
-						green = 120;
-					green++;
-					if (i % 5 == 0){
-						blue++;
+					red = 255;
+					green = 101;
+					for (var i = 0;i < (step - 350); i++){
+						green++;
+						if (i % 2 == 0){
+							blue++;
+						}
 					}
 				}
 				
-				console.log("step: " + step+ "red: "+ red+ " green: " +green  );
+				console.log("step: " + step+ " red: "+ red+ " green: " +green + " blue: " + blue + "  " );
 			app.lightsController.write("23," + red + "," + green + "," +  blue + "," + white + ";");
 		}
 			/*
