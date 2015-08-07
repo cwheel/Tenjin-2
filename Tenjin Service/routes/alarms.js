@@ -209,7 +209,6 @@ module.exports = function(app) {
 		timeToday.hour(old.hour());
 		timeToday.minute(old.minute());
 
-		//The date today already passed,the alarm must be for tommorow
 		if (timeToday < (new Date())) {
 			var timeTom = moment();
 			timeTom.add(1, 'days');
