@@ -8,10 +8,12 @@ import android.view.WindowManager;
 import android.widget.SeekBar;
 import android.widget.Switch;
 
+import org.json.JSONObject;
+
 import java.util.HashMap;
 
-public class Advanced extends Activity implements LightControllerDelegate {
-    private LightController lc;
+public class Advanced extends Activity implements TenjinRoomDelegate {
+    private TenjinRoom room;
     private final int SEND_THRESHOLD = 40;
 
     private SeekBar r1;
@@ -28,17 +30,16 @@ public class Advanced extends Activity implements LightControllerDelegate {
     private Switch musicSync;
 
     @Override
-    public void lightControllerProxyAuthSuccess() {
-        System.out.println("success!");
-    }
+    public void roomLightProxyAuthSuccess() {}
 
     @Override
-    public void lightControllerProxyAuthFailure() {
-        System.out.println("oh noes it failed!");
-    }
+    public void roomLightProxyAuthFailure() {}
 
     @Override
-    public void lightControllerContextUpdated(HashMap context) {
+    public void roomAlarmsUpdate(JSONObject resp) {}
+
+    @Override
+    public void roomLightContextUpdated(HashMap context) {
         r1.setProgress((int) context.get("red1"));
         g1.setProgress((int) context.get("green1"));
         b1.setProgress((int) context.get("blue1"));
@@ -62,7 +63,7 @@ public class Advanced extends Activity implements LightControllerDelegate {
 
     @Override
     protected void onResume() {
-        lc.fetchContext(this);
+        room.fetchLightingContext(this);
 
         SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
 
@@ -123,8 +124,8 @@ public class Advanced extends Activity implements LightControllerDelegate {
 
         setContentView(R.layout.activity_advanced);
 
-        lc = new LightController(this);
-        lc.fetchContext(this);
+        room = new TenjinRoom(this);
+        room.fetchLightingContext(this);
 
         r1 = (SeekBar)findViewById(R.id.r1);
         g1 = (SeekBar)findViewById(R.id.g1);
@@ -147,9 +148,9 @@ public class Advanced extends Activity implements LightControllerDelegate {
             public void onStopTrackingTouch(SeekBar seekBar) {
                 try {
                     if (bedSync.isChecked()) {
-                        lc.setLight(LightController.red, val);
+                        room.setLight(TenjinRoom.red, val);
                     } else {
-                        lc.setLight(LightController.red1, val);
+                        room.setLight(TenjinRoom.red1, val);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -172,9 +173,9 @@ public class Advanced extends Activity implements LightControllerDelegate {
                 if (Math.abs(val - lastVal) > SEND_THRESHOLD) {
                     try {
                         if (bedSync.isChecked()) {
-                            lc.setLight(LightController.red, val);
+                            room.setLight(TenjinRoom.red, val);
                         } else {
-                            lc.setLight(LightController.red1, val);
+                            room.setLight(TenjinRoom.red1, val);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -191,9 +192,9 @@ public class Advanced extends Activity implements LightControllerDelegate {
             public void onStopTrackingTouch(SeekBar seekBar) {
                 try {
                     if (bedSync.isChecked()) {
-                        lc.setLight(LightController.green, val);
+                        room.setLight(TenjinRoom.green, val);
                     } else {
-                        lc.setLight(LightController.green1, val);
+                        room.setLight(TenjinRoom.green1, val);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -216,9 +217,9 @@ public class Advanced extends Activity implements LightControllerDelegate {
                 if (Math.abs(val - lastVal) > SEND_THRESHOLD) {
                     try {
                         if (bedSync.isChecked()) {
-                            lc.setLight(LightController.green, val);
+                            room.setLight(TenjinRoom.green, val);
                         } else {
-                            lc.setLight(LightController.green1, val);
+                            room.setLight(TenjinRoom.green1, val);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -235,9 +236,9 @@ public class Advanced extends Activity implements LightControllerDelegate {
             public void onStopTrackingTouch(SeekBar seekBar) {
                 try {
                     if (bedSync.isChecked()) {
-                        lc.setLight(LightController.blue, val);
+                        room.setLight(TenjinRoom.blue, val);
                     } else {
-                        lc.setLight(LightController.blue1, val);
+                        room.setLight(TenjinRoom.blue1, val);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -260,9 +261,9 @@ public class Advanced extends Activity implements LightControllerDelegate {
                 if (Math.abs(val - lastVal) > SEND_THRESHOLD) {
                     try {
                         if (bedSync.isChecked()) {
-                            lc.setLight(LightController.blue, val);
+                            room.setLight(TenjinRoom.blue, val);
                         } else {
-                            lc.setLight(LightController.blue1, val);
+                            room.setLight(TenjinRoom.blue1, val);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -279,9 +280,9 @@ public class Advanced extends Activity implements LightControllerDelegate {
             public void onStopTrackingTouch(SeekBar seekBar) {
                 try {
                     if (bedSync.isChecked()) {
-                        lc.setLight(LightController.whiteBeds, val);
+                        room.setLight(TenjinRoom.whiteBeds, val);
                     } else {
-                        lc.setLight(LightController.white1, val);
+                        room.setLight(TenjinRoom.white1, val);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -304,9 +305,9 @@ public class Advanced extends Activity implements LightControllerDelegate {
                 if (Math.abs(val - lastVal) > SEND_THRESHOLD) {
                     try {
                         if (bedSync.isChecked()) {
-                            lc.setLight(LightController.whiteBeds, val);
+                            room.setLight(TenjinRoom.whiteBeds, val);
                         } else {
-                            lc.setLight(LightController.white1, val);
+                            room.setLight(TenjinRoom.white1, val);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -323,7 +324,7 @@ public class Advanced extends Activity implements LightControllerDelegate {
             public void onStopTrackingTouch(SeekBar seekBar) {
                 try {
                     if (!bedSync.isChecked()) {
-                        lc.setLight(LightController.red2, val);
+                        room.setLight(TenjinRoom.red2, val);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -346,7 +347,7 @@ public class Advanced extends Activity implements LightControllerDelegate {
                 if (Math.abs(val - lastVal) > SEND_THRESHOLD) {
                     try {
                         if (!bedSync.isChecked()) {
-                            lc.setLight(LightController.red2, val);
+                            room.setLight(TenjinRoom.red2, val);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -363,7 +364,7 @@ public class Advanced extends Activity implements LightControllerDelegate {
             public void onStopTrackingTouch(SeekBar seekBar) {
                 try {
                     if (!bedSync.isChecked()) {
-                        lc.setLight(LightController.green2, val);
+                        room.setLight(TenjinRoom.green2, val);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -386,7 +387,7 @@ public class Advanced extends Activity implements LightControllerDelegate {
                 if (Math.abs(val - lastVal) > SEND_THRESHOLD) {
                     try {
                         if (!bedSync.isChecked()) {
-                            lc.setLight(LightController.green2, val);
+                            room.setLight(TenjinRoom.green2, val);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -403,7 +404,7 @@ public class Advanced extends Activity implements LightControllerDelegate {
             public void onStopTrackingTouch(SeekBar seekBar) {
                 try {
                     if (!bedSync.isChecked()) {
-                        lc.setLight(LightController.blue2, val);
+                        room.setLight(TenjinRoom.blue2, val);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -426,7 +427,7 @@ public class Advanced extends Activity implements LightControllerDelegate {
                 if (Math.abs(val - lastVal) > SEND_THRESHOLD) {
                     try {
                         if (!bedSync.isChecked()) {
-                            lc.setLight(LightController.blue2, val);
+                            room.setLight(TenjinRoom.blue2, val);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -443,7 +444,7 @@ public class Advanced extends Activity implements LightControllerDelegate {
             public void onStopTrackingTouch(SeekBar seekBar) {
                 try {
                     if (!bedSync.isChecked()) {
-                        lc.setLight(LightController.white2, val);
+                        room.setLight(TenjinRoom.white2, val);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -466,7 +467,7 @@ public class Advanced extends Activity implements LightControllerDelegate {
                 if (Math.abs(val - lastVal) > SEND_THRESHOLD) {
                     try {
                         if (!bedSync.isChecked()) {
-                            lc.setLight(LightController.white2, val);
+                            room.setLight(TenjinRoom.white2, val);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -482,7 +483,7 @@ public class Advanced extends Activity implements LightControllerDelegate {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 try {
-                    lc.setLight(LightController.whiteMain, val);
+                    room.setLight(TenjinRoom.whiteMain, val);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -499,7 +500,7 @@ public class Advanced extends Activity implements LightControllerDelegate {
 
                 if (Math.abs(val - lastVal) > SEND_THRESHOLD) {
                     try {
-                        lc.setLight(LightController.whiteMain, val);
+                        room.setLight(TenjinRoom.whiteMain, val);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

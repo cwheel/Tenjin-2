@@ -15,6 +15,9 @@
     "grunt-express-server": "latest",
     "striptags": "latest",
     "node-schedule": "latest",
-    "moment": "latest"
+    "moment": "latest",
+    "player": "latest",
+    "lame": "latest",
+    "speaker": "latest"
   }
 }

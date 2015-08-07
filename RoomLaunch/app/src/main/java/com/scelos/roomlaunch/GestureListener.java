@@ -4,19 +4,9 @@ import android.app.Activity;
 import android.content.Intent;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
-import android.widget.Toast;
-
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-
-import java.util.HashMap;
 
 public class GestureListener extends GestureDetector.SimpleOnGestureListener {
-    private LightController lc;
+    private TenjinRoom room;
     private Activity activity;
     private int lightState = 0;
 
@@ -29,7 +19,7 @@ public class GestureListener extends GestureDetector.SimpleOnGestureListener {
 
     public GestureListener(Activity activ) {
         activity = activ;
-        lc = new LightController(activ);
+        room = new TenjinRoom(activ);
     }
 
     @Override
@@ -53,22 +43,24 @@ public class GestureListener extends GestureDetector.SimpleOnGestureListener {
             if (lightState < MIN_LIGHT) lightState = MIN_LIGHT;
 
             try {
-                lc.setLight(LightController.superWhiteAll, lightState);
+                room.setLight(TenjinRoom.superWhiteAll, lightState);
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
             return true;
         } else if (Math.abs(distanceY) > SWIPE_DISTANCE_THRESHOLD && Math.abs(velocityY) > SWIPE_VELOCITY_THRESHOLD) {
+            room.alarmOff();
+
             if (distanceY > 0) {
                 try {
-                    lc.setLight(LightController.superWhiteAll, MAX_LIGHT);
+                    room.setLight(TenjinRoom.superWhiteAll, MAX_LIGHT);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             } else {
                 try {
-                    lc.setLight(LightController.superWhiteAll, MIN_LIGHT );
+                    room.setLight(TenjinRoom.superWhiteAll, MIN_LIGHT);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

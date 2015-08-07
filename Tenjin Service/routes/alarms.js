@@ -1,9 +1,15 @@
 var schedule = require('node-schedule');
 var moment = require('moment');
 var fs = require("fs");
+var lame = require('lame');
+var Speaker = require('speaker');
 
 module.exports = function(app) {
 	var alarms;
+	var playingAlarm = null;
+	var playingAlarmCount = -1;
+	var sunriseStep = 0;
+	var sunriseDelay = 0; 
 
 	fs.readFile('alarms.json', 'utf8', function (err,data) {
 		if (err) {
@@ -21,7 +27,7 @@ module.exports = function(app) {
 		  	    			console.log("    • Scheduling alarm job for " + alarmDate);
 		  	    			alarms[alarm].job = schedule.scheduleJob(alarmDate, audioOnlyAlarm);
 		  	    		} else if (alarms[alarm].type == "audio-light") {
-		  	    			cconsole.log("    • Scheduling alarm job for " + alarmDate);
+		  	    			console.log("    • Scheduling alarm job for " + alarmDate);
 		  	    			alarms[alarm].job = schedule.scheduleJob(alarmDate, audioAndLightAlarm);
 		  	    		}
 		  	    	}
@@ -36,15 +42,113 @@ module.exports = function(app) {
 		});
 	}
 
+	function runAlarm() {
+		try {
+			playingAlarm.end();
+			playingAlarm = null;
+		} catch (e) {}
+
+		if (playingAlarmCount == -1) {
+			return;
+		} else {
+			playingAlarm = fs.createReadStream('alarms/Helium.mp3').pipe(new lame.Decoder).pipe(new Speaker);
+			playingAlarmCount++;
+		}
+
+		if (playingAlarmCount < 5 && playingAlarmCount > 0) {
+			setTimeout(runAlarm, 9000);
+		}
+	}
+
 	function audioOnlyAlarm() {
-		console.log("alarm triggered");
+		playingAlarmCount = 0;
+		runAlarm();
 	}
 
 	function audioAndLightAlarm() {
-		console.log("alarm triggered");
+		sunriseStart(30);
 	}
 
-	//Uses YYYY-MM-DDTHH:MM:SS format
+	function sunriseValue() {
+		if (app.lcConnected && app.lightsController.isOpen()) {
+			// Initialize Color Values
+			var red = 0;
+			var green = 0;
+			var blue = 0;
+			var white = 0;
+
+			// Loop 1 Red 
+			if (sunriseStep < 255){
+				for(var i = 0; i < sunriseStep;i++){
+					red++
+					if (i % 50 == 0){
+						green++;
+					}
+				}
+			}
+			// Loop 2 Yellow
+			else if( sunriseStep < 350){
+				red = 255;
+				green = 6;
+				for (var i = 0;  i < (sunriseStep - 255); i++){
+					green++;
+				}
+			}
+			// Loop 3 
+			else if (sunriseStep < 506){
+				red = 255;
+				green = 100;
+				for (var i = 0;i < (sunriseStep - 350); i++){
+					green++;
+					if (i % 4 == 0){
+						blue++;
+					}
+				}
+			}
+			// Loop 4
+			else if (sunriseStep < 722){
+				red = 255;
+				green = 255;
+				blue = 39;
+				for (var i = 0; i < (sunriseStep - 506); i++){
+					blue++;
+					if (i %2 == 0){
+						white++;
+					}
+				}
+			}
+			// Loop 5
+			else if (sunriseStep < 870){
+				red = 255;
+				green = 255;
+				blue = 255;
+				white = 108;
+				for (var i =0; i < (sunriseStep - 722); i++){
+					white++;
+				}
+			}
+			if (sunriseStep == 870){
+				red = 255;
+				green = 255;
+				blue = 255;
+				white= 255;
+				playingAlarmCount = 0;
+				runAlarm();
+			} else {
+				setTimeout(sunriseValue, sunriseDelay);
+			}
+			sunriseStep += 1;
+			app.lightsController.write("23," + red + "," + green + "," +  blue + "," + white + ";");
+		} 
+	}
+	
+
+	function sunriseStart(min){
+		sunriseDelay = min / 870 * 60  * 1000;
+		SunriseStep = 0;
+		sunriseValue()
+	}
+
 	app.get('/alarms/new', function(req, res) {
 		var execDate = moment(req.query.date);
 		var alarm;
@@ -88,6 +192,14 @@ module.exports = function(app) {
 
 		saveAlarms();
 		res.send("alarm_stored");
+	});
+
+	app.get('/alarms/off', function(req, res) {
+		playingAlarm.end();
+		playingAlarm = null;
+		playingAlarmCount = -1;
+
+		res.send("alarm_off");
 	});
 
 	app.get('/alarms/validate', function(req, res) {

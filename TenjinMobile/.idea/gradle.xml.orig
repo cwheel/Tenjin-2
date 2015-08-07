@@ -5,6 +5,10 @@
       <GradleProjectSettings>
         <option name="distributionType" value="LOCAL" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
+<<<<<<< HEAD
+        <option name="gradleHome" value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1" />
+        <option name="gradleJvm" value="1.6" />
+=======
         <option name="gradleHome" value="$APPLICATION_HOME_DIR$/gradle/gradle-2.4" />
         <option name="gradleJvm" value="1.8" />
         <option name="modules">
@@ -14,6 +18,7 @@
             <option value="$PROJECT_DIR$/app/libs/volley" />
           </set>
         </option>
+>>>>>>> 75fff32df549e6bf4da184b2b7c3c8713cf46074
       </GradleProjectSettings>
     </option>
   </component>
