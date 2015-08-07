@@ -8,6 +8,8 @@ module.exports = function(app) {
 	var alarms;
 	var playingAlarm = null;
 	var playingAlarmCount = -1;
+	var sunriseStep = 0;
+	var sunriseDelay = 0; 
 
 	fs.readFile('alarms.json', 'utf8', function (err,data) {
 		if (err) {
@@ -25,7 +27,7 @@ module.exports = function(app) {
 		  	    			console.log("    • Scheduling alarm job for " + alarmDate);
 		  	    			alarms[alarm].job = schedule.scheduleJob(alarmDate, audioOnlyAlarm);
 		  	    		} else if (alarms[alarm].type == "audio-light") {
-		  	    			cconsole.log("    • Scheduling alarm job for " + alarmDate);
+		  	    			console.log("    • Scheduling alarm job for " + alarmDate);
 		  	    			alarms[alarm].job = schedule.scheduleJob(alarmDate, audioAndLightAlarm);
 		  	    		}
 		  	    	}
@@ -64,8 +66,87 @@ module.exports = function(app) {
 	}
 
 	function audioAndLightAlarm() {
-		playingAlarmCount = 0;
-		runAlarm();
+		sunriseStart(30);
+	}
+
+	function sunriseValue() {
+		if (app.lcConnected && app.lightsController.isOpen()) {
+			// Initialize Color Values
+			var red = 0;
+			var green = 0;
+			var blue = 0;
+			var white = 0;
+
+			// Loop 1 Red 
+			if (sunriseStep < 255){
+				for(var i = 0; i < sunriseStep;i++){
+					red++
+					if (i % 50 == 0){
+						green++;
+					}
+				}
+			}
+			// Loop 2 Yellow
+			else if( sunriseStep < 350){
+				red = 255;
+				green = 6;
+				for (var i = 0;  i < (sunriseStep - 255); i++){
+					green++;
+				}
+			}
+			// Loop 3 
+			else if (sunriseStep < 506){
+				red = 255;
+				green = 100;
+				for (var i = 0;i < (sunriseStep - 350); i++){
+					green++;
+					if (i % 4 == 0){
+						blue++;
+					}
+				}
+			}
+			// Loop 4
+			else if (sunriseStep < 722){
+				red = 255;
+				green = 255;
+				blue = 39;
+				for (var i = 0; i < (sunriseStep - 506); i++){
+					blue++;
+					if (i %2 == 0){
+						white++;
+					}
+				}
+			}
+			// Loop 5
+			else if (sunriseStep < 870){
+				red = 255;
+				green = 255;
+				blue = 255;
+				white = 108;
+				for (var i =0; i < (sunriseStep - 722); i++){
+					white++;
+				}
+			}
+			if (sunriseStep == 870){
+				red = 255;
+				green = 255;
+				blue = 255;
+				white= 255;
+				playingAlarmCount = 0;
+				runAlarm();
+			} else {
+				setTimeout(sunriseValue, sunriseDelay);
+			}
+			sunriseStep += 1;
+			app.lightsController.write("23," + red + "," + green + "," +  blue + "," + white + ";");
+		} 
+	}
+	
+
+	function sunriseStart(min){
+		sunriseDelay = min / 870 * 60  * 1000;
+		SunriseStep = 0;
+		sunriseValue()
 	}
 
 	app.get('/alarms/new', function(req, res) {
@@ -152,103 +233,6 @@ module.exports = function(app) {
 	});
 
 	app.get('/alarms/list', function(req, res) {
-		if (app.lcConnected && app.lightsController.isOpen()) {
-
-			// 
-			var step = 0;
-			for(step; step < 460; step++){
-				// Initialize Color Values
-				var red = 0;
-				var green = 0;
-				var blue = 0;
-				var white = 0;
-
-				// Loop 1 Red 
-				if (step < 255){
-					for(var i = 0; i < step;i++){
-						red++
-						if (i % 50 == 0){
-							green++;
-						}
-					}
-				}
-				// Loop 2 Yellow
-				else if( step < 350){
-					red = 255;
-					green = 6;
-					for (var i = 0;  i < (step - 255); i++){
-						green++;
-					}
-				}
-				// Loop 3 
-				else if (step < 460){
-					red = 255;
-					green = 101;
-					for (var i = 0;i < (step - 350); i++){
-						green++;
-						if (i % 2 == 0){
-							blue++;
-						}
-					}
-				}
-				
-				console.log("step: " + step+ " red: "+ red+ " green: " +green + " blue: " + blue + "  " );
-			app.lightsController.write("23," + red + "," + green + "," +  blue + "," + white + ";");
-		}
-			/*
-			for(var i = 0; i < 255;i++){
-				red++;
-				if (i % 50 == 0){
-					green++;
-				}
-				app.lightsController.write("23," + red + "," + green + "," +  blue + "," + 0 + ";");
-			}
-			for(var i = 0; i < 50; i++){
-				green++;
-				app.lightsController.write("23," + red + "," + green + "," +  blue + "," + 0 + ";");
-			} 
-			for(var i = 0; i < 155; i++){
-				if (green == 255){
-					break;
-				}else{
-					green++;
-					if (i % 5 == 0){
-						blue++;
-					}
-				app.lightsController.write("23," + red + "," + green + "," +  blue + "," + 0 + ";");
-				}
-			}
-			
-			for (var i = 0; i < 64;i++){
-				if (green == 255){
-					break;
-				}
-					green++;
-					if (i % 3 == 0){
-						blue++;
-					}
-				app.lightsController.write("23," + red + "," + green + "," +  blue + "," + 0 + ";");
-				}
-			while (green != 255){
-				blue++;
-				if (blue % 4  == 0){
-					green++;
-				}
-				app.lightsController.write("23," + red + "," + green + "," +  blue + "," + 0 + ";");
-			}
-			while(blue != 255){
-				blue++;
-				app.lightsController.write("23," + red + "," + green + "," +  blue + "," + 0 + ";");
-
-			}
-			while(white != 255){
-				white++;
-				app.lightsController.write("23," + red + "," + green + "," +  blue + "," + white + ";");
-			}
- */
-		} else {
-		}
 		res.send(alarms);
-
 	});
 };
