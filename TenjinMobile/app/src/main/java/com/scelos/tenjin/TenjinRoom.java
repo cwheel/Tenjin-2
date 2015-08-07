@@ -153,8 +153,6 @@ public class TenjinRoom {
         StringRequest req = new StringRequest(Request.Method.GET, srv + "alarms/list", new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-               // GsonBuilder builder = new GsonBuilder();
-                //Object o = builder.create().fromJson(response, Object.class);
                 JSONObject json = null;
                 try {
                     json  = new JSONObject(response);
