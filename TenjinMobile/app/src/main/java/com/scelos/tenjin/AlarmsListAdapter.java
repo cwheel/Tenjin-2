@@ -18,6 +18,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.DateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -133,19 +134,26 @@ public class AlarmsListAdapter extends BaseAdapter {
             e.printStackTrace();
         }
 
+        String type = TenjinRoom.audioAlarm;
+        try {
+            type = ((JSONObject)getItem(position)).getString("type");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        if (type.equals("audio-light")) {
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(alarmDate);
+            cal.add(Calendar.MINUTE, 30);
+            alarmDate = cal.getTime();
+        }
+
         int min = alarmDate.getMinutes();
 
         if (min < 10) {
             row.alarmTime.setText(alarmDate.getHours() + ":0" + min);
         } else {
             row.alarmTime.setText(alarmDate.getHours() + ":" + min);
-        }
-
-        String type = TenjinRoom.audioAlarm;
-        try {
-            type = ((JSONObject)getItem(position)).getString("type");
-        } catch (JSONException e) {
-            e.printStackTrace();
         }
 
         if (type.equals(TenjinRoom.audioAlarm)) {
