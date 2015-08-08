@@ -15,11 +15,7 @@ tenjin.config(['$routeProvider',
     }).when('/3',{
         templateUrl: '/pages/weeklyWeather.html',
         controller: 'weeklyWeatherController'
-    }).when('/4',{
-        templateUrl: '/pages/reddit.html',
-        controller: 'redditController'
     })
-
 
   }]);
   tenjin.controller('mainController', function($scope,$location,$timeout,$route, $http) {
