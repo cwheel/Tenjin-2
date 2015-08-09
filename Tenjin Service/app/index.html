@@ -11,7 +11,7 @@
 		<script type="text/javascript" src="tenjin.js"></script>
 		<script type="text/javascript" src="controllers/weather.js"></script>
 		<script type="text/javascript" src="controllers/uit.js"></script>
-		<script type="text/javascript" src="controllers/reddit.js"></script>
+		<script type="text/javascript" src="controllers/main.js"></script>
 		<link rel="stylesheet" type="text/css" href="css/animations.css"/>
 		<link rel="stylesheet" type="text/css" href="css/page.css"/>
 		<link rel="stylesheet" type="text/css" href="css/main.css"/>
@@ -33,7 +33,7 @@
 		<div class="row">
 			<div id="scroller">
 				<span id="scrollerContent">
-					 <span ng-repeat="(key, value) in reddit">{{key}} - <span ng-repeat="story in value">{{story.title}}</span>
+					 <span ng-repeat="(key, value) in reddit"><b>{{key}}</b> - <span ng-repeat="story in value">{{story}}</span>
 					 </span>
 				</span>	
 			</div> 
