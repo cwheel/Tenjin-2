@@ -22,7 +22,15 @@ tenjin.config(['$routeProvider',
         var pageId = 1;
         var tfhr = false;
         var subreddits = ['technology','all','netsec'];
+        $scope.backgroundId = 1;
+        var numBackgrounds = 1;
 
+        $scope.backgroundsUpdater = function(){
+            $scope.backgroundId = ++$scope.backgroundId % (numBackgrounds +1) || 1;
+            $timeout(function() {
+              $scope.backgroundsUpdater();
+            }, 3000);
+        }
 
         $scope.nextPage = function() {
             pageId = (++pageId % (((Object.keys($route.routes).length - 2) / 2) + 1)) || 1;
@@ -49,13 +57,6 @@ tenjin.config(['$routeProvider',
               $scope.updateReddit();
             }, 30000);
         }
-
-        // Used to Start the Loop for the first time.
-        $timeout(function() {
-          $scope.nextPage();
-        }, 30000);
-        $scope.updateReddit();
-
 
         $scope.updateClock = function() {
           if (tfhr) {
@@ -95,6 +96,12 @@ tenjin.config(['$routeProvider',
           }, 500);
         };
 
+        // Used to Start the Loop for the first time.
+        $timeout(function() {
+          $scope.nextPage();
+        }, 30000);
+        $scope.updateReddit();
         $scope.updateClock();
+        $scope.backgroundsUpdater();
 
     });
