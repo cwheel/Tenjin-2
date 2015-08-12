@@ -2,7 +2,7 @@
 	<div class="page-title">IT Status</div>
 	<div ng-repeat="(key, value) in data">
 		<div class="uit-status-row">
-			<span class="uit-status">{{value.status}}</span> {{value.display_name}} <span class="uit-message">{{value.messages}}</span> 
+			<span class="uit-status {{value.status}}" >{{value.status}}</span> {{value.display_name}} <span class="{{getMessageClass(value.status)}}">{{value.messages}}</span> 
 		</div>
 	</div>
 </div>
