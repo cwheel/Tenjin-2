@@ -1,7 +1,20 @@
 module.exports = function(app){
 	var notifications = [];
+	var twilio = require('twilio')('AC5d168be31cd95bf7e3a21d683e529c3f', '3dcfe6820a10636ae35ae6b1a2224764');
 
-	app.get("/notf/list",function(req,res){
+	app.get("/sms/incoming", function(req, res) {
+		console.log(req.query);
+
+		/*
+		client.messages.create({  
+			from: "+14135294014", 
+			body: "Hello World",   
+		}, function(err, message) { 
+			console.log(err); 
+		});*/
+	});
+
+	app.get("/notf/list", function(req,res){
 		res.send(notifications);
 	});
 
