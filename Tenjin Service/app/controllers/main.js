@@ -1,7 +1,7 @@
 tenjin.controller('mainController', function($scope,$location,$timeout,$route, $http) {
     var pageId = 1;
     var tfhr = false;
-    var subreddits = ['technology','all','netsec'];
+    var subreddits = ['technology','news','netsec'];
     $scope.backgroundId = 1;
     var numBackgrounds = 1;
 
@@ -21,7 +21,9 @@ tenjin.controller('mainController', function($scope,$location,$timeout,$route, $
         }, 300000);
     };
 
-    $scope.updateReddit = function(){
+    $scope.updateReddit = function() {
+    	$("#scrollerContent").css("left", $(window).width());
+    	
         $scope.reddit = {};
         for (var i = 0; i < subreddits.length; i++){
 			$http.get('http://www.reddit.com/r/' + subreddits[i]  +'/top/.json').then(function(res){
@@ -30,17 +32,23 @@ tenjin.controller('mainController', function($scope,$location,$timeout,$route, $
 				
 				for (var j = 0; j < 3; j++){
 					var extra = "";
-					if (j < 3) extra = " • ";
+					if (j < 2) extra = " • ";
 
 					$scope.reddit["/r/" + subreddit].push(res.data.data.children[j].data.title + extra);
 				}
 			});
         }
 
+        
         $timeout(function() {
-        	$scope.updateReddit();
-        }, 30000);
-    }
+        	$("#scrollerContent").css("left", $(window).width());
+        	$("#scrollerContent").animate({left: "-=" + ($("#scrollerContent").width() + $(window).width())}, 60000, "linear");
+
+        	$timeout(function() {
+        		$scope.updateReddit();
+        	}, 60000);
+        }, 1000);
+    };
 
     $scope.updateClock = function() {
 		if (tfhr) {
