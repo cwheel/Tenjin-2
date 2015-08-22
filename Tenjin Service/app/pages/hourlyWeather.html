@@ -1,4 +1,8 @@
 <div class="centerView">
+	<div class="page-title">
+			<div class="page-title-icon"></div>
+			<div class="page-title-name"> <div style="position:absolute;bottom:0;left:75px;"> Hourly Weather Report </div></div>
+		</div>
 	<div class="col-md-3">
 		<div>Current Weather</div>
 		<skycon class="weeklyDayIcon" icon="minWeather.icon"></skycon>
@@ -6,12 +10,15 @@
 	</div>
 	<div class="col-md-9">
 		<div>Hourly Weather</div>
-		<div ng-repeat="hour in hourWeather.data|limitTo:12" class="row">
-			<skycon class="col-md-2" icon="hour.icon" ></skycon>
-			<div class="col-md-1">{{getHour(hour.time)}}:00</div>
-			<div class="col-md-1">{{hour.apparentTemperature}}&deg; F</div>
-			<div class="col-md-1">{{hour.precipProbability}} %</div>
-		</div>
+			<div ng-repeat="hour in hourWeather.data|limitTo:6" class="col-md-2 weeklyWeather">
+				<div class="weeklyDay">{{getHour(hour.time)}}:00</div>
+				<skycon class="weeklyDayIcon" icon="hour.icon" size="75"></skycon>
+				<div class="weeklySummary">{{hour.summary}}</div>
+				<div class="weeklySubText">High: <div style="font-weight:400;"> {{hour.apparentTemperatureMax}} °F </div></div>
+				<div class="weeklySubText">Low: <div style="font-weight:400;">{{hour.apparentTemperatureMin}} °F</div></div>
+				<div class="weeklySubText">Chance of Precipitation: <div style="font-weight:400;">{{hour.precipProbability}} % </div></div>
+				<div class="weeklySubText">Total Precipitation: <div style="font-weight:400;">{{hour.precipIntensity}} in.</div></div>
+			</div>
 	</div>
 	
 </div>
