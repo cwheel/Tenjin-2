@@ -14,5 +14,8 @@ tenjin.config(['$routeProvider',
 	}).when('/3',{
 		templateUrl: '/pages/weeklyWeather.html',
 		controller: 'weeklyWeatherController'
+	}).when('/4',{
+		templateUrl: '/pages/npr.html',
+		controller: 'nprController'
 	})
 }]);
