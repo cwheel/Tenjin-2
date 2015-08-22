@@ -1,25 +1,28 @@
 module.exports = function(app){
 	var notifications = [];
-	var twilio = require('twilio')('AC5d168be31cd95bf7e3a21d683e529c3f', '3dcfe6820a10636ae35ae6b1a2224764');
 
 	app.get("/sms/incoming", function(req, res) {
-		console.log(req.query);
+		var mssgStart = "UMass Amherst Alerts:";
 
-		/*
-		client.messages.create({  
-			from: "+14135294014", 
-			body: "Hello World",   
-		}, function(err, message) { 
-			console.log(err); 
-		});*/
+		if (req.query.From.indexOf("67283") > -1 && req.query.Body.indexOf(mssgStart) > -1) {
+
+			request({
+  		    	url:  'http://localhost:' + process.env.PORT + "/notif/add",
+  		    	qs: {text: req.query.Body.replace(mssgStart, "")}
+	  		}, function (error, response, body) {});
+
+			res.send("SMS_RECIEVED");
+		} else {
+			res.send("SMS_REJECTED");
+		}
 	});
 
 	app.get("/notf/list", function(req,res){
 		res.send(notifications);
 	});
 
-	app.get("/notf/add", function(req,res){
-		notitications.push(req.body);
+	app.get("/notf/add", function(req, res){
+		notitications.push(req.body.text);
 
 		if (app.lcConnected && app.lightsController.isOpen()) {
 			app.lightsController.write("26;");

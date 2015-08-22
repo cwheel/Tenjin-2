@@ -31,8 +31,8 @@ public class RoomActivity extends ActionBarActivity implements TenjinRoomDelegat
 
     private TenjinRoom room;
 
-    private String roomUser;
-    private String roomPassword;
+    private String username;
+    private String password;
 
     @Override
     public void roomLightContextUpdated(HashMap context) {
@@ -75,7 +75,7 @@ public class RoomActivity extends ActionBarActivity implements TenjinRoomDelegat
 
     @Override
     protected void onResume() {
-        room = new TenjinRoom(this, Config.srv, this.getIntent().getStringExtra("username"), this.getIntent().getStringExtra("password"));
+        room = new TenjinRoom(this, Config.srv, username, password);
         super.onResume();
     }
 
@@ -101,9 +101,9 @@ public class RoomActivity extends ActionBarActivity implements TenjinRoomDelegat
         saturationBar.setEnabled(false);
         valueBar.setEnabled(false);
 
-        roomUser = this.getIntent().getStringExtra("username");
-        roomPassword = this.getIntent().getStringExtra("password");
-        room = new TenjinRoom(this, Config.srv, roomUser, roomPassword);
+        username = this.getIntent().getStringExtra("username");
+        password = this.getIntent().getStringExtra("password");
+        room = new TenjinRoom(this, Config.srv, username, password);
 
         picker.addValueBar(valueBar);
         picker.addSaturationBar(saturationBar);
@@ -197,8 +197,8 @@ public class RoomActivity extends ActionBarActivity implements TenjinRoomDelegat
 
         if (item.getItemId() == R.id.action_alarms) {
             Intent i = new Intent(this.getApplicationContext(), AlarmsActivity.class);
-            i.putExtra("username", roomUser);
-            i.putExtra("password", roomPassword);
+            i.putExtra("username", username);
+            i.putExtra("password", password);
             i.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             this.startActivity(i);
 

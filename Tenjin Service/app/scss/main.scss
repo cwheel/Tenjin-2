@@ -21,7 +21,7 @@
 }
 
 #scroller {
-	bottom: 15%;
+	bottom: 20%;
 	position: absolute;
 	color: white;
 	font-size: 18px;
@@ -29,18 +29,7 @@
 }
 
 #scrollerContent {
-	position: relative;
-	left: 0%;
+	position: absolute;
 	float: left;
 	white-space: nowrap;
-	-webkit-animation: scroll 30s linear infinite;
-}
-
-@-webkit-keyframes scroll {
-	from {
-		left: 100%;
-	}
-	to {
-		left: -100%;
-	}
 }

@@ -62,7 +62,7 @@ http.listen(4000, function() {
 //Configure authentication for the proxy application
 require('socketio-auth')(io, {
   authenticate: socketAuthReq, 
-  timeout: 1000
+  timeout: 3000
 });
 
 //An application is attempting to join the proxy
