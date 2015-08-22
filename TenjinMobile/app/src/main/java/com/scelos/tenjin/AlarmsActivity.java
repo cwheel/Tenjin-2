@@ -28,7 +28,20 @@ public class AlarmsActivity extends ActionBarActivity implements TenjinRoomDeleg
     private ProgressBar spinner;
     private TenjinRoom room;
 
+    private String username;
+    private String password;
+
     private JSONObject alarms;
+
+    @Override
+    protected void onResume() {
+        room = new TenjinRoom(this, Config.srv, username, password);
+
+        spinner.setVisibility(View.VISIBLE);
+        alarmsView.setVisibility(View.GONE);
+
+        super.onResume();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +50,9 @@ public class AlarmsActivity extends ActionBarActivity implements TenjinRoomDeleg
 
         getWindow().getDecorView().setBackgroundColor(Color.parseColor("#3e3a4f"));
 
-        room = new TenjinRoom(this, Config.srv, this.getIntent().getStringExtra("username"), this.getIntent().getStringExtra("password"));
+        username = this.getIntent().getStringExtra("username");
+        password = this.getIntent().getStringExtra("password");
+        room = new TenjinRoom(this, Config.srv, username, password);
 
         alarmsView = (ListView)findViewById(R.id.listView);
         newAlarm = (FloatingActionButton)findViewById(R.id.newAlarm);
@@ -107,6 +122,7 @@ public class AlarmsActivity extends ActionBarActivity implements TenjinRoomDeleg
     @Override
     public void roomAlarmsUpdate(JSONObject resp) {
         spinner.setVisibility(View.GONE);
+        alarmsView.setVisibility(View.VISIBLE);
         alarmsView.setAdapter(new AlarmsListAdapter(this, resp, room));
     }
 }
