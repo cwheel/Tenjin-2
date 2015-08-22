@@ -55,7 +55,7 @@ public class TenjinRoom {
     public static final String rgbw = "lights/rgbw1and2";
 
     public static final String audioAlarm = "audio";
-    public static final String lightAlarm = "light-light";
+    public static final String lightAlarm = "audio-light";
 
     private HashMap<String, Integer> context;
     private Boolean isUsingProxy = false;

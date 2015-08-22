@@ -20,7 +20,6 @@ module.exports = function(app) {
 
 			for (var alarm in alarms) {
 		  	    if (alarms.hasOwnProperty(alarm)) {
-		  	    	
 		  	    	var alarmDate = moment(alarms[alarm].date).toDate();
 		  	    	if (alarmDate > (new Date())) {
 		  	    		if (alarms[alarm].type == "audio") {
@@ -189,24 +188,24 @@ module.exports = function(app) {
 	});
 
 	app.get('/alarms/settype', function(req, res) {
-		if (alarms[req.query.name] == "audio" && req.query.type == "audio-light") {
+		if (alarms[req.query.name].type == "audio" && req.query.type == "audio-light") {
 			alarms[req.query.name].date = moment(alarms[req.query.name].date).subtract(30, 'minutes').format();
-		} else if (alarms[req.query.name] == "audio-light" && req.query.type == "audio") {
+		} else if (alarms[req.query.name].type == "audio-light" && req.query.type == "audio") {
 			alarms[req.query.name].date = moment(alarms[req.query.name].date).add(30, 'minutes').format();
 		}
 
 		alarms[req.query.name].type = req.query.type;
 
-		var alarmDate = moment(alarms[alarm].date).toDate();
+		var alarmDate = moment(alarms[req.query.name].date).toDate();
 		if (alarmDate > (new Date())) {
 			try {
 				alarms[req.query.name].job.cancel();
 			} catch (e) {}
 
-			if (alarms[alarm].type == "audio") {
-				alarms[alarm].job = schedule.scheduleJob(alarmDate, audioOnlyAlarm);
-			} else if (alarms[alarm].type == "audio-light") {
-				alarms[alarm].job = schedule.scheduleJob(alarmDate, audioAndLightAlarm);
+			if (alarms[req.query.name].type == "audio") {
+				alarms[req.query.name].job = schedule.scheduleJob(alarmDate, audioOnlyAlarm);
+			} else if (alarms[req.query.name].type == "audio-light") {
+				alarms[req.query.name].job = schedule.scheduleJob(alarmDate, audioAndLightAlarm);
 			}
 		}
 
