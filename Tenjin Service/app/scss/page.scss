@@ -27,7 +27,21 @@ body{
 }
 
 .page-title {
-	font-size: 18pt;
+	font-size: 22pt;
+	font-weight: 500;
+	margin-bottom:25px;
+	height:70px;
+	position:relative;
+}
+.page-title-icon{
+	float:left;
+	height:55px;
+	width:62px;
+	background: url("../src/icons/forecastIO.png");
+	background-size:cover;
+}
+.page-title-name{
+	font-size: 22pt;
 	font-weight: 500;
 	margin-bottom:15px;
 	height:50px;

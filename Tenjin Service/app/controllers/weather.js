@@ -4,7 +4,7 @@ tenjin.controller('weeklyWeatherController', function($scope,$http) {
 	$http.get('/web/weather')
 	    .then(function(res){
 	    	$scope.weekWeather = res.data.daily;
-	    	for (var i = 0; i < 4; i++){
+	    	for (var i = 0; i < 6; i++){
 	    		//
 	    		if (i == 0){
 	    			$scope.weekWeather.data[i].day = "Today";
