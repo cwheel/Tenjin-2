@@ -25,7 +25,12 @@ tenjin.controller('mainController', function($scope,$location,$timeout,$route, $
     $("#scrollerContent").css("left", $(window).width());
 
     $scope.updateReddit = function(scroller) {
-        $scope.reddit = {};
+    	if (scroller == 1) {
+    		$scope.reddit = {};
+    	} else {
+    		$scope.reddit2 = {};
+    	}
+        
         for (var i = 0; i < subreddits.length; i++){
 			$http.get('http://www.reddit.com/r/' + subreddits[i]  +'/top/.json').then(function(res){
 				var subreddit = res.data.data.children[0].data.subreddit;
@@ -55,26 +60,26 @@ tenjin.controller('mainController', function($scope,$location,$timeout,$route, $
     	var scroller = false;
     	
     	$scope.$watch(function () { return $("#scrollerContent").css("left") }, function(newVal, oldVal) {
-    		if (Math.abs($("#scrollerContent").width() + Number(newVal.replace("px", ""))) < $(window).width() && !scroller2) {
+    		var pos = Math.abs($("#scrollerContent").width() + Number(newVal.replace("px", "")));
+    		if (pos < $(window).width() && !scroller2) {
     			scroller2 = true;
 
     			$("#scrollerContent2").css("left", $(window).width());
-    			$("#scrollerContent2").animate({left: "-=" + ($("#scrollerContent").width() + $(window).width())}, 60000, "linear");
+    			$("#scrollerContent2").animate({left: "-=" + ($("#scrollerContent2").width() + $(window).width())}, 60000, "linear");
 
     			$scope.$watch(function () { return $("#scrollerContent2").css("left") }, function(newVal2, oldVal2) {
-    				if (Math.abs($("#scrollerContent2").width() + Number(newVal2.replace("px", ""))) < $(window).width() && !scroller) {
+    				var pos2 = Math.abs($("#scrollerContent2").width() + Number(newVal2.replace("px", "")));
+    				if (pos2 < $(window).width() && !scroller) {
     					scroller = true;
 
     					$("#scrollerContent").css("left", $(window).width());
     					$("#scrollerContent").animate({left: "-=" + ($("#scrollerContent").width() + $(window).width())}, 60000, "linear");
     					$scope.scroll();
-    				} else if (newVal2 == 2) {
-    					console.log("updated2");
+    				} else if (pos2 == 0) {
     					$scope.updateReddit(2);
     				}
     			});
-    		} else if (newVal == 0) {
-    			console.log("updated");
+    		} else if (pos == 0) {
     			$scope.updateReddit(1);
     		}
     	});
