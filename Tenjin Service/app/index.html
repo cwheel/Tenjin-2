@@ -37,6 +37,13 @@
 					 </span>
 				</span>	
 			</div> 
+			
+			<div id="scroller2">
+				<span id="scrollerContent2">
+					 <span ng-repeat="(key, value) in reddit"><b>{{key}}</b> - <span ng-repeat="story in value">{{story}}</span>
+					 </span>
+				</span>	
+			</div> 
 			</div>
 			<div id="clock">
 				<div>{{time}} &nbsp;</div>
