@@ -106,8 +106,8 @@ tenjin.controller('mainController', function($scope,$location,$timeout,$route, $
 
 			var min = now.getMinutes();
 			var hour = now.getHours();
-			$scope.day = now.getDay();
-
+			$scope.day = now.getDate();
+            
 			if ($scope.day.toString().slice(-1) == 1){
 				$scope.ending = "st";
 			}else if ($scope.day.toString().slice(-1) == 2){
