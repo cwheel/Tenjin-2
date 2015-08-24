@@ -1,0 +1,14 @@
+$storySize : 175px;
+.story{
+	height:$storySize;
+	width:100%;
+	margin-bottom:20px;
+	margin-left:10px;
+}
+.storyText{
+	margin-bottom:10px;
+}
+.storyImage{
+	background-size:cover;
+	height:$storySize;
+}

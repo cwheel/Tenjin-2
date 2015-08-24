@@ -3,8 +3,15 @@
 			<div class="page-title-icon" style="background-image:url('../src/icons/npr.png');width:150px;height:50px"></div>
 			<div class="page-title-name"> <div style="position:absolute;bottom:0;left:175px;"> NPR News Report</div></div>
 	</div>
-	<div ng-repeat="story in stories|limitTo:5">
-		<div>{{story.title.$text}}</div>
-		<div>{{story.teaser.$text}} </div>
+	<div class="row story" ng-repeat="story in stories|limitTo:3">
+		<div class="col-md-2 storyImage" style="background-image: url({{story.image[0].crop[2].src}});"></div>
+		<div class="col-md-10" style="font-size:24px;"> 
+			<div class="storyText">
+				<b>{{story.title.$text}}</b> {{story.teaser.$text}} 
+			</div>
+			<div class= "storyText">
+				<b>{{story.storytwo.title.$text}}</b> {{story.storytwo.teaser.$text}} 
+			</div>
+		</div>
 	</div>
 </div>
