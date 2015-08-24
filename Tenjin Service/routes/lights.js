@@ -2,6 +2,9 @@ module.exports = function(app) {
 	var unreachable = "LC_unreachable";
 	var success = "LC_success";
 
+	var isAnimating = false;
+	var animationContext = {};
+
 	app.get('/lights/r1', function(req, res) {
 		if (app.lcConnected && app.lightsController.isOpen()) {
 			app.lightsController.write("1," + req.query.val + ";");
@@ -223,4 +226,47 @@ module.exports = function(app) {
 			res.send(unreachable);
 		}
 	});
+
+	app.get('/lights/animation', function(req, res) {
+		if (app.lcConnected && app.lightsController.isOpen()) {
+			animation = req.query.type;
+
+			app.lightsController.write("28;");
+
+			var respond = function(data) {
+				app.lightsController.write("26;");
+				app.lightsController.removeListener('data', respond);
+
+				animationContext.initContext = data.replace("CTX_","").split(",");
+
+				performAniamtionStep();
+			};
+
+			app.lightsController.on('data', respond);
+			res.send("ANIMATION_STARTING");
+		} else {
+			res.send(unreachable);
+		}
+	});
+
+	app.get('/lights/animationStop', function(req, res) {
+		animation = "";
+		animationContext = {};
+
+		if (app.lcConnected && app.lightsController.isOpen()) {
+			app.lightsController.write("27;");
+		}
+
+		res.send("ANIMATION_STOPPED");
+	});
+
+	function performAniamtionStep() {
+		if (animation == "fade") {
+			
+		}
+
+		if (animation != "") {
+			setTimeout(performAniamtionStep, 100);
+		}
+	}
 };

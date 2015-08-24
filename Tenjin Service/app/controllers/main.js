@@ -110,7 +110,7 @@ tenjin.controller('mainController', function($scope,$location,$timeout,$route, $
             
 			if ($scope.day.toString().slice(-1) == 1){
 				$scope.ending = "st";
-			}else if ($scope.day.toString().slice(-1) == 2){
+			} else if ($scope.day.toString().slice(-1) == 2){
 				$scope.ending = "nd";
 			} else if ($scope.day.toString().slice(-1) == 3){
 				$scope.ending = "rd";

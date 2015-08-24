@@ -210,7 +210,7 @@ public class TenjinRoom {
             public void onResponse(String response) {
                 if (response.equals("LC_unreachable")) {
                     Toast.makeText(activity.getApplicationContext(), "Could not contact the lighting controller", Toast.LENGTH_SHORT).show();
-                } else {
+                } else if (!response.equals("LC_success")){
                     context = new HashMap<String, Integer>();
                     String[] vals = response.split(",");
 
