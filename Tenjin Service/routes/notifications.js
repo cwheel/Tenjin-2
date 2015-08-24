@@ -57,6 +57,7 @@ module.exports = function(app){
 			}
 
 			app.lightsController.write("27;");
+			res.send("NOTIF_SHOWN");
 		} else {
 			res.send(unreachable);
 		}
