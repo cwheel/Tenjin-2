@@ -6,10 +6,10 @@ tenjin.controller('mainController', function($scope,$location,$timeout,$route, $
     var numBackgrounds = 1;
 
     $scope.backgroundsUpdater = function(){
-        $scope.backgroundId = ++$scope.backgroundId % (numBackgrounds +1) || 1;
+        $scope.backgroundId = ++$scope.backgroundId % (numBackgrounds +27) || 1;
         $timeout(function() {
           $scope.backgroundsUpdater();
-        }, 3000);
+        }, 10000);
     }
 
     $scope.nextPage = function() {
@@ -18,7 +18,7 @@ tenjin.controller('mainController', function($scope,$location,$timeout,$route, $
 
         $timeout(function() {
           $scope.nextPage();
-        }, 300000);
+        }, 30000);
     };
 
     $("#scrollerContent2").css("left", $(window).width());

@@ -1,7 +1,7 @@
 tenjin.controller('weeklyWeatherController', function($scope,$http) {
 	$scope.weekWeather = {};
 	var days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-	$http.get('/web/weather')
+	$http.get('/cache/weather/')
 	    .then(function(res){
 	    	$scope.weekWeather = res.data.daily;
 	    	for (var i = 0; i < 6; i++){
@@ -39,13 +39,27 @@ tenjin.controller('weeklyWeatherController', function($scope,$http) {
 tenjin.controller('hourlyWeatherController', function($scope,$http){
 	$scope.hourWeather = {};
 	$scope.minWeather = {};
-	$http.get('/web/weather')
+	$http.get('/cache/weather/')
 	.then(function(res){
 		$scope.hourWeather = res.data.hourly;
-		console.log($scope.hourWeather);
 		$scope.minWeather = res.data.minutely;
-		console.log($scope.minWeather);
+		for (var i = 0; i < 12; i++){
+	    		//Removes Signifigant Digits to Rain Amount 
+	    		if ($scope.hourWeather.data[i].precipIntensity != 0){
+		    		$scope.hourWeather.data[i].precipIntensity = $scope.hourWeather.data[i].precipIntensity * 100;
+		    		$scope.hourWeather.data[i].precipIntensity = Math.round($scope.hourWeather.data[i].precipIntensity) /100;
+		    		if ($scope.hourWeather.data[i].precipIntensity == 0){
+		    			$scope.hourWeather.data[i].precipIntensity =  "> 0.01"
+		    		}
+		    	}
+		    	// Rounds Temperature to a whole number
+		    	$scope.hourWeather.data[i].apparentTemperature = Math.floor($scope.hourWeather.data[i].apparentTemperature);
+		    	//Turns Probability to a Percent
+		    	$scope.hourWeather.data[i].precipProbability = Math.floor($scope.hourWeather.data[i].precipProbability * 100);
+		    	//Include Time of hot and cold
+		    }
 	});
+
 	$scope.getHour = function(unix){
 		return new Date(unix * 1000).getHours();
 	}
