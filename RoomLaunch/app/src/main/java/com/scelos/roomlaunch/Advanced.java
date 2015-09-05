@@ -88,7 +88,6 @@ public class Advanced extends Activity implements TenjinRoomDelegate {
         w3.setProgress(sharedPreferences.getInt("w3", 0));
 
         bedSync.setChecked(sharedPreferences.getBoolean("bedSync", false));
-        musicSync.setChecked(sharedPreferences.getBoolean("musicSync", false));
 
         super.onResume();
     }
@@ -109,7 +108,6 @@ public class Advanced extends Activity implements TenjinRoomDelegate {
         editor.putInt("w3", w3.getProgress());
 
         editor.putBoolean("bedSync", bedSync.isChecked());
-        editor.putBoolean("musicSync", musicSync.isChecked());
         editor.commit();
 
         super.onBackPressed();
@@ -138,7 +136,6 @@ public class Advanced extends Activity implements TenjinRoomDelegate {
         w3 = (SeekBar)findViewById(R.id.w3);
 
         bedSync = (Switch)findViewById(R.id.bedSync);
-        musicSync= (Switch)findViewById(R.id.musicSync);
 
         r1.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             int val = 0;

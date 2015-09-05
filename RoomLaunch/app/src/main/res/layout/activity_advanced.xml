@@ -373,19 +373,6 @@
                 android:checked="false" />
         </TableRow>
 
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <Switch
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Sync With Music"
-                android:id="@+id/musicSync"
-                android:layout_column="34"
-                android:layout_marginLeft="20dp"
-                android:checked="false" />
-        </TableRow>
 
     </TableLayout>
 </FrameLayout>
