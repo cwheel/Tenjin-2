@@ -43,7 +43,8 @@ public class GestureListener extends GestureDetector.SimpleOnGestureListener {
             if (lightState < MIN_LIGHT) lightState = MIN_LIGHT;
 
             try {
-                room.setLight(TenjinRoom.superWhiteAll, lightState);
+                room.setLight(TenjinRoom.whiteBeds, lightState);
+                room.setLight(TenjinRoom.whiteMain, lightState);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -54,7 +55,8 @@ public class GestureListener extends GestureDetector.SimpleOnGestureListener {
 
             if (distanceY > 0) {
                 try {
-                    room.setLight(TenjinRoom.superWhiteAll, MAX_LIGHT);
+                    room.setLight(TenjinRoom.whiteBeds, MAX_LIGHT);
+                    room.setLight(TenjinRoom.whiteMain, MAX_LIGHT);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
