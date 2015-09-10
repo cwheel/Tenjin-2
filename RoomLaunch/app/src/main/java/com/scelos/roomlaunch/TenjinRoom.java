@@ -136,7 +136,6 @@ public class TenjinRoom {
         prams.put("g", String.valueOf(g));
         prams.put("b", String.valueOf(b));
         prams.put("w", String.valueOf(w));
-
         sendRequest(light, prams);
     }
 

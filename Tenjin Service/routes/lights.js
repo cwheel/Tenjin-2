@@ -158,15 +158,6 @@ module.exports = function(app) {
 		}
 	});
 
-	app.get('/lights/sw1and2and3', function(req, res) {
-		if (app.lcConnected && app.lightsController.isOpen()) {
-			app.lightsController.write("19," + req.query.val + ";");
-			res.send(success);
-		} else {
-			res.send(unreachable);
-		}
-	});
-
 	app.get('/lights/rgbw1', function(req, res) {
 		if (app.lcConnected && app.lightsController.isOpen()) {
 			app.lightsController.write("20," + req.query.r + "," + req.query.g + "," + req.query.b + "," + req.query.w + ";");
@@ -178,7 +169,7 @@ module.exports = function(app) {
 
 	app.get('/lights/rgbw2', function(req, res) {
 		if (app.lcConnected && app.lightsController.isOpen()) {
-			app.lightsController.write("22," + req.query.r + "," + req.query.g + "," + req.query.b + "," + req.query.w + ";");
+			app.lightsController.write("21," + req.query.r + "," + req.query.g + "," + req.query.b + "," + req.query.w + ";");
 			res.send(success);
 		} else {
 			res.send(unreachable);

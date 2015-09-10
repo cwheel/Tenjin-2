@@ -4,8 +4,10 @@ import android.app.Activity;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.CompoundButton;
 import android.widget.SeekBar;
 import android.widget.Switch;
 
@@ -28,6 +30,7 @@ public class Advanced extends Activity implements TenjinRoomDelegate {
     private SeekBar w3;
 
     private Switch complementarySync;
+    private boolean complementaryLock = false;
     private Switch bedSync;
     private Switch musicSync;
 
@@ -140,6 +143,38 @@ public class Advanced extends Activity implements TenjinRoomDelegate {
 
         bedSync = (Switch)findViewById(R.id.bedSync);
         complementarySync = (Switch)findViewById(R.id.complementarySync);
+        bedSync.setOnCheckedChangeListener(new Switch.OnCheckedChangeListener() {
+
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    //Update the 2nd Light Strip to the same values as the first
+                    r2.setProgress(r1.getProgress());
+                    g2.setProgress(g1.getProgress());
+                    b2.setProgress(b1.getProgress());
+                    w2.setProgress(w1.getProgress());
+
+                    try {
+                        room.setRGBWLight(TenjinRoom.rgbw2, r1.getProgress(), g1.getProgress(), b1.getProgress(), w1.getProgress());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                //Disable Complementary when the lights are in Sync Mode
+                complementarySync.setEnabled(!isChecked);
+            }
+        });
+        complementarySync.setOnCheckedChangeListener(new Switch.OnCheckedChangeListener(){
+
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked){
+                    updateComplementary(1);
+                }
+                //Disable Sync Lights as it conflicts with Complementary Colors
+                bedSync.setEnabled(!isChecked);
+            }
+        });
         r1.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             int val = 0;
             int lastVal = 0;
@@ -176,7 +211,7 @@ public class Advanced extends Activity implements TenjinRoomDelegate {
                     try {
                         if (bedSync.isChecked()) {
                             room.setLight(TenjinRoom.red, val);
-                        }else if (complementarySync.isChecked()){
+                        }else if (complementarySync.isChecked() && !complementaryLock){
                             updateComplementary(1);
                         } else {
                             room.setLight(TenjinRoom.red1, val);
@@ -224,7 +259,7 @@ public class Advanced extends Activity implements TenjinRoomDelegate {
                     try {
                         if (bedSync.isChecked()) {
                             room.setLight(TenjinRoom.green, val);
-                        } else if (complementarySync.isChecked()){
+                        } else if (complementarySync.isChecked()&& !complementaryLock){
                             updateComplementary(1);
                         }else {
                             room.setLight(TenjinRoom.green1, val);
@@ -272,7 +307,7 @@ public class Advanced extends Activity implements TenjinRoomDelegate {
                     try {
                         if (bedSync.isChecked()) {
                             room.setLight(TenjinRoom.blue, val);
-                        }else if (complementarySync.isChecked()){
+                        }else if (complementarySync.isChecked() && !complementaryLock){
                             updateComplementary(1);
                         } else {
                             room.setLight(TenjinRoom.blue1, val);
@@ -335,7 +370,7 @@ public class Advanced extends Activity implements TenjinRoomDelegate {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 try {
-                    if (complementarySync.isChecked()) {
+                    if (complementarySync.isChecked() ) {
                         updateComplementary(2);
                     }else if (!bedSync.isChecked()) {
                         room.setLight(TenjinRoom.red2, val);
@@ -360,7 +395,7 @@ public class Advanced extends Activity implements TenjinRoomDelegate {
 
                 if (Math.abs(val - lastVal) > SEND_THRESHOLD) {
                     try {
-                        if (complementarySync.isChecked()) {
+                        if (complementarySync.isChecked() && !complementaryLock) {
                             updateComplementary(2);
                         }else if (!bedSync.isChecked()) {
                             room.setLight(TenjinRoom.red2, val);
@@ -404,7 +439,7 @@ public class Advanced extends Activity implements TenjinRoomDelegate {
 
                 if (Math.abs(val - lastVal) > SEND_THRESHOLD) {
                     try {
-                        if (complementarySync.isChecked()) {
+                        if (complementarySync.isChecked() && !complementaryLock) {
                             updateComplementary(2);
                         }else if (!bedSync.isChecked()) {
                             room.setLight(TenjinRoom.green2, val);
@@ -448,7 +483,7 @@ public class Advanced extends Activity implements TenjinRoomDelegate {
 
                 if (Math.abs(val - lastVal) > SEND_THRESHOLD) {
                     try {
-                        if (complementarySync.isChecked()) {
+                        if (complementarySync.isChecked() && !complementaryLock) {
                             updateComplementary(2);
                         }else if (!bedSync.isChecked()) {
                             room.setLight(TenjinRoom.blue2, val);
@@ -539,21 +574,37 @@ public class Advanced extends Activity implements TenjinRoomDelegate {
             stripOne[1] = g1.getProgress();
             stripOne[2] = b1.getProgress();
             int[] stripTwo = complementary(stripOne);
+            complementaryLock = true;
             r2.setProgress(stripTwo[0]);
             g2.setProgress(stripTwo[1]);
             b2.setProgress(stripTwo[2]);
             try {
+                room.setRGBWLight(TenjinRoom.rgbw2, stripTwo[0], stripTwo[1], stripTwo[2], w2.getProgress());
                 room.setRGBWLight(TenjinRoom.rgbw1, stripOne[0], stripOne[1], stripOne[2], w1.getProgress());
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            complementaryLock = false;
+
+        }else if(strip == 2){
+            int[] stripTwo = new int[3];
+            stripTwo[0] = r2.getProgress();
+            stripTwo[1] = g2.getProgress();
+            stripTwo[2] = b2.getProgress();
+            int[] stripOne = complementary(stripTwo);
+            complementaryLock = true;
+            r1.setProgress(stripOne[0]);
+            g1.setProgress(stripOne[1]);
+            b1.setProgress(stripOne[2]);
             try {
                 room.setRGBWLight(TenjinRoom.rgbw2, stripTwo[0], stripTwo[1], stripTwo[2], w2.getProgress());
+                room.setRGBWLight(TenjinRoom.rgbw1, stripOne[0], stripOne[1], stripOne[2], w1.getProgress());
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }else if(strip == 2){
-
+            complementaryLock = false;
         }else{
             throw new IllegalArgumentException("Only Strips 1 and 2 are supported");
         }
