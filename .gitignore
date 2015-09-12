@@ -1,6 +1,7 @@
-Node/cache/
-Node/cache
-Node/node_modules/
-Node/node_modules
-.sass-cache
+ProxyRoute/node_modules/
+Tenjin\ Service/node_modules
+Tenjin\ Service/.sass-cache
+Tenjin\ Service/cache
 ProxyRoute/config.js
+Tenjin\ Service/config.js
+TenjinMobile/app/src/main/java/com/scelos/tenjin/Config.java
