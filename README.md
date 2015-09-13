@@ -18,5 +18,7 @@ We started Tenjin with a simple goal in mind: to bring our boring dorm room into
  12. If you configured everything correctly, at this point you should be able to connect via the mobile app and the kindle to control attached lighting devices. On the same computer, or another one connected to the same LAN, open http://<room controller IP<:3000 to view the room information screen.
 
 **Included Software**
+
 [Android Volley](https://android.googlesource.com/platform/frameworks/volley) - Apache2 License
+
 [HoloColor Picker](https://github.com/LarsWerkman/HoloColorPicker) - Apache2 License
