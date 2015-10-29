@@ -1,7 +1,7 @@
 # Tenjin-2
 An elegant room lighting and information system designed with UMass Amherst in mind
 
-We started Tenjin with a simple goal in mind: to bring our boring dorm room into the 21st century. The first version of Tenjin supported only a simple informational screen with NPR news, current weather, and Reddit among others. During the summer of our second year, we embarked on Tenjin 2, a complete rebuild on Tenjin in NodeJS. Not only does Tenpin 2 provided its clasic information screen (now with support for 1080p monitors and proper scaling), but it also supports controlling LED strips for beautiful and elegant room lighting.
+We started Tenjin with a simple goal in mind: to bring our boring dorm room into the 21st century. The first version of Tenjin supported only a simple informational screen with NPR news, current weather, and Reddit among others. During the summer of our second year, we embarked on Tenjin 2, a complete rebuild on Tenjin in NodeJS. Not only does Tenjin 2 provided its clasic information screen (now with support for 1080p monitors and proper scaling), but it also supports controlling LED strips for beautiful and elegant room lighting.
 
 **Installation**
  1. Clone the Tenjin-2 repository on an internet facing machine (one with a static ip address, a rarity on most college campuses) and a local machine (one to act as the room controller) and some sort of build machine (Desktop/Laptop).
